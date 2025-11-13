@@ -1,0 +1,28 @@
+@import "font.css";
+
+:root{
+    --hightlightColor:#4176DE;
+    --mainFontColor:#fff;
+    --subFontColor:#9fa2a5;
+    --whiteColor:#fff;
+    --headerBackground:#0e0e10;
+    --contentsBackground:#212224;
+    --appBackground:#151516;
+    --greyColor:#515359;
+    --gridFont:#e2e2e2;
+
+    --scrollThumb:#444;
+    --scrollbackground:#ddd;
+}
+
+*{color:inherit;font-family:inherit;padding:0;margin:0;box-sizing:border-box;}
+*::-webkit-scrollbar{width:10px;}
+*::-webkit-scrollbar-thumb{background:var(--scrollThumb);background-clip: padding-box;border:2px solid transparent;border-radius:4px;}
+*::-webkit-scrollbar-track{background:var(--scrollbackground);border-radius:4px;}
+a{text-decoration:none;}
+ul{list-style:none;}
+img{max-width:100%;}
+i{display:flex;cursor:default;}
+button, .btn{display:flex;align-items:center;background:none;font-size:inherit;border:none;outline:none;cursor:pointer;position:relative;}
+.btn-wrap{display:flex;align-items:center;gap:8px;}
+.btn-wrap.center{justify-content:center;}
