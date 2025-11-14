@@ -7,6 +7,7 @@ const ChatBot = () => {
   const [chatInputVal, setChatInputVal] = useState("");
   const [sendBtnActive, setSendBtnActive] = useState(false);
   const [chatStart, setChatStart] = useState(false);
+  const [textSize, setTextSize] = useState("크게");
 
   const handleChatInputChange = (e) => {
     setChatInputVal(e.target.value);
@@ -38,11 +39,11 @@ const ChatBot = () => {
 
   return (
     <>
-      <div className="chat-bot">
+      <div className={`chat-bot${textSize === "작게" ? " large" : textSize === "보통" ? " small" : ""}`}>
         <ChatSidebar />
 
         <div className="contents">
-          <ChatBotHeader />
+          <ChatBotHeader textSize={textSize} setTextSize={setTextSize} />
 
           <div className="chat-box">
             <div className="start-chat">필요한 규정 정보를 찾아드릴게요.</div>
