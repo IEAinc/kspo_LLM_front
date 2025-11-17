@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ChatBot from "./components/pages/ChatBot.jsx";
+import Login from "./components/pages/admin/Login.jsx";
 
 const App = () => {
 
@@ -11,6 +12,10 @@ const App = () => {
           <Route path="/" element={<Navigate to="/main" replace />} />
 
           <Route path="/main" element={<ChatBot />} />
+
+          {/* 관리자 페이지 */}
+          <Route path="/ksponcoadministrator" element={<Login />} />
+
 
           {/*<Route path="*" element={<NotFound />} />*/}
         </Routes>

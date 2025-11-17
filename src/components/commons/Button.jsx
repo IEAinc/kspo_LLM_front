@@ -15,7 +15,7 @@ const Button = (props) => {
       data-size={props.iconSize}
       onClick={props.onClick}
       disabled={props.disabled}
-      style={{ "--icon-size": props.iconSize ? `${props.iconSize}px` : "20px" }}
+      style={{ "--icon-size": props.iconSize ? `${props.iconSize}px` : null }}
     >
       {props.icon && <span className={`btn-icon ${props.icon}`}></span>}
       {props.text && <span className="btn-text">{props.text}</span>}
