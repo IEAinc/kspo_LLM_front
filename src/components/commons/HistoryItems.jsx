@@ -11,6 +11,7 @@ const HistoryItems = (props) => {
   const [rename, setRename] = useState("");
   const titleChangerRef = useRef(null);
 
+  /* 히스토리 목록 클릭 시 기존 메시지 로딩 */
   const handleHistoryClick = (clickedIndex) => {
     props.setActiveIndex(clickedIndex);
 
@@ -21,6 +22,7 @@ const HistoryItems = (props) => {
     });
   }
 
+  /* 더보기 버튼 클릭 */
   const handleMoreClick = (e) => {
     e.stopPropagation();
     setMoreActive(true);
@@ -30,6 +32,7 @@ const HistoryItems = (props) => {
     setMoreRect(rect);
   }
 
+  /* 더보기 외부 클릭 시 닫기 */
   const handleClickOutside = (e) => {
     if(editMenuRef.current && editMenuRef.current.contains(e.target) || titleChangerRef.current && titleChangerRef.current.contains(e.target)){
       return;

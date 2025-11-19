@@ -1,17 +1,15 @@
 import React, { useRef, useState } from "react";
 /**
- * @typedef {Object} AccordionItem
- * @property {string} source
  * @property {string} article
  * @property {string} chapter
  * @property {string} clause
- * @property {string} content
  */
 
 const AccordionBox = (props) => {
   const [openIndex, setOpenIndex] = useState(new Set());
   const contentRefs = useRef([]);
 
+  // 아코디언 열고 닫기
   const handleAccordionClick = (clickedIndex) => {
     setOpenIndex((prev) => {
       const newSet = new Set(prev);
@@ -22,7 +20,6 @@ const AccordionBox = (props) => {
       }
       return newSet;
     });
-    console.log(clickedIndex)
   }
 
   return (

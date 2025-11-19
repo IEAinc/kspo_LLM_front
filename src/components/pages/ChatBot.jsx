@@ -7,6 +7,10 @@ import AnswerText from "../commons/chat/AnswerText.jsx";
 import AnswerDropdown from "../commons/chat/AnswerDropdown.jsx";
 import { generateRandomString } from "../../assets/api/commons.js";
 
+/**
+ * @property {string} citation
+ */
+
 const ChatBot = ({ http }) => {
   const [chatInputVal, setChatInputVal] = useState("");
   const [sendBtnActive, setSendBtnActive] = useState(false);
@@ -16,10 +20,8 @@ const ChatBot = ({ http }) => {
   const [chatLoad, setChatLoad] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const chatViewRef = useRef(null);
-  const [accordionList, setAccordionList] = useState([
-    { open: false, title: "", subTitle: "", content: "" },
-  ]);
 
+  /* 메시지 입력 시 값 저장 및 버튼 활성화 */
   const handleChatInputChange = (e) => {
     setChatInputVal(e.target.value);
 
@@ -30,21 +32,21 @@ const ChatBot = ({ http }) => {
     }
   }
 
-  // 메세지 전송
+  /* 메세지 전송 */
   const chatSendProcess = () => {
     setSendBtnActive(false);
     setChatInputVal("");
 
-    // 보낸 메세지 바로 출력
+    /* 보낸 메세지 바로 출력 */
     let sendData = [{ type: "USER", content: chatInputVal}]
     setChatLoad((prevChatLoad) => [...prevChatLoad, ...sendData]);
 
-    //채팅룸 ID 랜덤 생성
+    /* 채팅룸 ID 랜덤 생성 */
     let createRoomId = generateRandomString();
 
     try{
       if(!chatStart){
-        // 새 채팅일 경우
+        /* 새 채팅일 경우 */
         setChatStart(true);
         setActiveIndex(0);
 
@@ -71,21 +73,21 @@ const ChatBot = ({ http }) => {
     }
   }
 
-  // 입력창 엔터 키 입력 시 전송
+  /* 입력창 엔터 키 입력 시 전송 */
   const handleEnterSend = (e) => {
     if(chatInputVal.length > 0 && e.keyCode === 13){
       chatSendProcess();
     }
   }
 
-  // 입력창 값 입력 후 버튼 클릭 시 전송
+  /* 입력창 값 입력 후 버튼 클릭 시 전송 */
   const handleSendBtnClick = () => {
     if(chatInputVal.length > 0){
       chatSendProcess();
     }
   }
 
-  // 새 채팅 및 채팅 시 마다 리스트 업데이트
+  /* 새 채팅 및 채팅 시 마다 리스트 업데이트 */
   useEffect(() => {
     try{
       http.get("/room/all")
@@ -103,7 +105,7 @@ const ChatBot = ({ http }) => {
     }
   },[chatLoad]);
 
-  // 처음 화면 로딩 시 채팅 목록이 있으면 첫번째 요소 하이라이트
+  /* 처음 화면 로딩 시 채팅 목록이 있으면 첫번째 요소 하이라이트 */
   useEffect(() => {
     try{
       http.get("/room/all")
@@ -160,13 +162,16 @@ const ChatBot = ({ http }) => {
                       }else{
                         return <>
                           <div className="answer">
-                            {/*<AnswerText text={item.content} />*/}
                             {item.citation.length > 0 ?
                               <>
+                                {/* 텍스트 & 드롭다운 */}
                                 <AnswerDropdown text={item.content} accordionList={item.citation} />
                               </>
                               :
-                              <></>
+                              <>
+                                {/* 순수 텍스트만 */}
+                                <AnswerText text={item.content} />
+                              </>
                             }
                             <div className="rating btn-wrap">
                               <Button className={"like"} icon={"like"} />

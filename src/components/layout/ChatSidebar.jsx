@@ -5,10 +5,12 @@ import HistoryItems from "../commons/HistoryItems.jsx";
 const ChatSidebar = (props) => {
   const [sidebarClose, setSidebarClose] = useState(false);
 
+  /* 사이드바 열고 닫기 */
   const handleSidebarClose = () => {
     setSidebarClose(!sidebarClose);
   }
 
+  /* 새 채팅 클릭 */
   const handleNewChat = () => {
     props.setChatLoad([]);
     props.setChatStart(false);
