@@ -2,30 +2,17 @@ import React, { useState } from 'react';
 import Button from "../commons/Button.jsx";
 import HistoryItems from "../commons/HistoryItems.jsx";
 
-const ChatSidebar = () => {
+const ChatSidebar = (props) => {
   const [sidebarClose, setSidebarClose] = useState(false);
-
-  let list = [
-    { title: "채팅히스토리2", active: false, contents: "대화내용2" },
-    { title: "채팅히스토리1", active: false, contents: "대화내용1" },
-  ];
-  const [chatList, setChatList] = useState(list);
 
   const handleSidebarClose = () => {
     setSidebarClose(!sidebarClose);
   }
 
   const handleNewChat = () => {
-    setChatList((prevChatList) => {
-      const nextIndex = prevChatList.length + 1;
-      const newItem = {
-        title: `채팅히스토리${nextIndex}`,
-        active: false,
-        contents: "",
-      };
-
-      return [newItem, ...prevChatList];
-    });
+    props.setChatLoad([]);
+    props.setChatStart(false);
+    props.setActiveIndex(null);
   };
 
   return (
@@ -38,8 +25,20 @@ const ChatSidebar = () => {
       <div className={`history-list${sidebarClose ? " hide" : ""}`}>
         <h3>채팅</h3>
         <ul>
-          { chatList.map((item, index) => (
-            <HistoryItems key={index} item={item} index={index} setChatList={setChatList} />
+          { props.chatHistoryList.map((item, index) => (
+            <HistoryItems
+              key={index}
+              item={item}
+              index={index}
+              http={props.http}
+              chatHistoryList={props.chatHistoryList}
+              setChatHistoryList={props.setChatHistoryList}
+              setChatStart={props.setChatStart}
+              setChatLoad={props.setChatLoad}
+              activeIndex={props.activeIndex}
+              setActiveIndex={props.setActiveIndex}
+              chatViewRef={props.chatViewRef}
+            />
           ))}
         </ul>
       </div>

@@ -12,12 +12,13 @@ const HistoryItems = (props) => {
   const titleChangerRef = useRef(null);
 
   const handleHistoryClick = (clickedIndex) => {
-    props.setChatList((prevChatList) =>
-      prevChatList.map((item, index) => ({
-        ...item,
-        active: index === clickedIndex,
-      }))
-    );
+    props.setActiveIndex(clickedIndex);
+
+    props.http.get(`/history/${props.item.chatRoomId}`)
+    .then((response) => {
+      props.setChatLoad(response.data.response);
+      props.setChatStart(true);
+    });
   }
 
   const handleMoreClick = (e) => {
@@ -61,22 +62,41 @@ const HistoryItems = (props) => {
   /* 수정 하고 엔터 누를 때 적용 */
   const handleKeyDown = (e, clickedIndex) => {
     if(e.keyCode === 13){
-      props.setChatList((prevChatList) =>
+      props.setChatHistoryList((prevChatList) =>
         prevChatList.map((item, index) => ({
           ...item,
-          title: index === clickedIndex ? rename : item.title,
+          chatRoomName: index === clickedIndex ? rename : item.chatRoomName,
         }))
       );
+
+      try{
+        console.log("rename", rename, props.item.chatRoomId)
+        props.http.put(`/room`, {
+          roomId: props.item.chatRoomId,
+          roomName: rename
+          })
+        .then(() => {
+        })
+      }catch(e){
+        console.log(e)
+      }
 
       setTitleChange(false);
     }
   }
 
   /* 더보기 > 삭제 클릭 */
-  const handleDelete = (clickedIndex) => {
-    props.setChatList((prevChatList) =>
-      prevChatList.filter((item, index) => index !== clickedIndex)
-    );
+  const handleDelete = () => {
+    try{
+      props.http.delete(`/room/${props.item.chatRoomId}`)
+      .then(() => {
+        props.setChatLoad([]);
+        props.setChatStart(false);
+        props.setActiveIndex(null);
+      })
+    }catch(e){
+      console.log(e)
+    }
 
     setMoreOpen(false);
   }
@@ -89,16 +109,16 @@ const HistoryItems = (props) => {
 
   return (
     <>
-      <li className={`btn${props.item.active ? " active" : ""}`} onClick={() => handleHistoryClick(props.index)}>
+      <li className={`btn${props.activeIndex === props.index ? " active" : ""}`} onClick={() => handleHistoryClick(props.index)}>
         {titleChange ?
           <>
             <label ref={titleChangerRef}>
-              <input type="text" defaultValue={props.item.title} name={"title_change"} onInput={handleTitleInput} onKeyDown={(e) => handleKeyDown(e, props.index)} autoFocus={true}/>
+              <input type="text" defaultValue={props.item.chatRoomName} name={"title_change"} onInput={handleTitleInput} onKeyDown={(e) => handleKeyDown(e, props.index)} autoFocus={true}/>
             </label>
           </>
           :
           <>
-            <p>{props.item.title}</p>
+            <p>{props.item.chatRoomName}</p>
           </>
         }
         <Button className={moreActive ? "active" : ""} icon={"more"} noPadding onClick={handleMoreClick} />

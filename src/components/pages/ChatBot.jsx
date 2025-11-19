@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ChatBotHeader from "../layout/ChatBotHeader.jsx";
 import ChatSidebar from "../layout/ChatSidebar.jsx";
 import Button from "../commons/Button.jsx";
 import SendBalloon from "../commons/chat/SendBalloon.jsx";
 import AnswerText from "../commons/chat/AnswerText.jsx";
 import AnswerDropdown from "../commons/chat/AnswerDropdown.jsx";
+import { generateRandomString } from "../../assets/api/commons.js";
 
-const ChatBot = () => {
+const ChatBot = ({ http }) => {
   const [chatInputVal, setChatInputVal] = useState("");
   const [sendBtnActive, setSendBtnActive] = useState(false);
   const [chatStart, setChatStart] = useState(false);
   const [textSize, setTextSize] = useState("크게");
-  const [sendMessage, setSendMessage] = useState("");
+  const [chatHistoryList, setChatHistoryList] = useState([]);
+  const [chatLoad, setChatLoad] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const chatViewRef = useRef(null);
   const [accordionList, setAccordionList] = useState([
-    { open: false, title: "62-스포츠문화교실운영지침", subTitle: "제 14조의 2 (이용료의 할인) 제1항", content: "① 운영자는 「스포츠센터 회원이용약관」 제12조에서 정한 회비 할인제도 이외에 다음 각 호의 할인제도를 운영할 수 있으나, 「스포츠센터 회원이용약관」 제12조에서 정한 할인제도와 중복하여 적용하지 않는다.(’12.7.24 신설, ’15.7.3, ‘16.4.19, ’22.12.28 개정)\n1. 직원 할인 : 공단, 체육산업 임직원(모든 종사원 포함), 협력업체 직원이 회원 등록시 회비의 50% 할인율을 적용한다.\n2. 직원 가족 할인 : 공단, 체육산업 임직원의 가족이 회원으로 등록할 경우 회비의 30% 할인율을 적용한다.\n3. (’15.7.3 삭제)\n4. 유관기관(단체) 직원 할인 : 센터별로 관공서 등 유관기관의 요청이 있는 경우 또는 판촉 및 매출 증대를 위하여 센터에서 필요한 경우 50% 이내에서 할인율을 적용하되, 대상종목 및 할인율은 센터별로 자율적으로 정한다.(’15.7.3 개정)" },
-    { open: false, title: "62-스포츠문화교실운영지침", subTitle: "제 14조의 2 (이용료의 할인) 제1항", content: "① 운영자는 「스포츠센터 회원이용약관」 제12조에서 정한 회비 할인제도 이외에 다음 각 호의 할인제도를 운영할 수 있으나, 「스포츠센터 회원이용약관」 제12조에서 정한 할인제도와 중복하여 적용하지 않는다.(’12.7.24 신설, ’15.7.3, ‘16.4.19, ’22.12.28 개정)\n1. 직원 할인 : 공단, 체육산업 임직원(모든 종사원 포함), 협력업체 직원이 회원 등록시 회비의 50% 할인율을 적용한다." },
-  ])
+    { open: false, title: "", subTitle: "", content: "" },
+  ]);
 
   const handleChatInputChange = (e) => {
     setChatInputVal(e.target.value);
@@ -27,36 +30,123 @@ const ChatBot = () => {
     }
   }
 
-  const handleEnterSend = (e) => {
-    if(chatInputVal.length > 0 && e.keyCode === 13){
-      console.log("보냄");
-      setChatStart(true);
-      setSendBtnActive(false);
-      setChatInputVal("");
-      setSendMessage(chatInputVal);
+  // 메세지 전송
+  const chatSendProcess = () => {
+    setSendBtnActive(false);
+    setChatInputVal("");
+
+    // 보낸 메세지 바로 출력
+    let sendData = [{ type: "USER", content: chatInputVal}]
+    setChatLoad((prevChatLoad) => [...prevChatLoad, ...sendData]);
+
+    //채팅룸 ID 랜덤 생성
+    let createRoomId = generateRandomString();
+
+    try{
+      if(!chatStart){
+        // 새 채팅일 경우
+        setChatStart(true);
+        setActiveIndex(0);
+
+        http.post("/chat/query", {
+          type: "USER",
+          content: chatInputVal,
+          chatRoomId: createRoomId
+        })
+        .then((response) => {
+          setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
+        })
+      }else{
+        http.post("/chat/query", {
+          type: "USER",
+          content: chatInputVal,
+          chatRoomId: chatHistoryList[0].chatRoomId
+        })
+        .then((response) => {
+          setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
+        })
+      }
+    }catch(e){
+      console.log(e);
     }
   }
 
-  const handleSendBtnClick = () => {
-    if(chatInputVal.length > 0){
-      console.log("보냄");
-      setChatStart(true);
-      setSendBtnActive(false);
-      setChatInputVal("");
-      setSendMessage(chatInputVal);
+  // 입력창 엔터 키 입력 시 전송
+  const handleEnterSend = (e) => {
+    if(chatInputVal.length > 0 && e.keyCode === 13){
+      chatSendProcess();
     }
   }
+
+  // 입력창 값 입력 후 버튼 클릭 시 전송
+  const handleSendBtnClick = () => {
+    if(chatInputVal.length > 0){
+      chatSendProcess();
+    }
+  }
+
+  // 새 채팅 및 채팅 시 마다 리스트 업데이트
+  useEffect(() => {
+    try{
+      http.get("/room/all")
+      .then((response) => {
+        setChatHistoryList(response.data.response.reverse());
+      });
+
+    }catch(e){
+      console.log(e);
+    }
+
+    /* 스크롤 내리기 */
+    if(chatViewRef.current){
+      chatViewRef.current.scrollTop = chatViewRef.current.scrollHeight;
+    }
+  },[chatLoad]);
+
+  // 처음 화면 로딩 시 채팅 목록이 있으면 첫번째 요소 하이라이트
+  useEffect(() => {
+    try{
+      http.get("/room/all")
+      .then((response) => {
+        setChatHistoryList(response.data.response.reverse());
+
+        if(response.data.response.length > 0){
+          setChatStart(true);
+          setActiveIndex(0);
+
+          http.get(`/history/${response.data.response[0].chatRoomId}`)
+          .then((response) => {
+            console.log(response.data.response)
+            setChatLoad(response.data.response);
+          });
+        }
+      })
+    }catch(e){
+      console.log(e);
+    }
+  },[]);
 
   return (
     <>
       <div className={`chat-bot${textSize === "작게" ? " large" : textSize === "보통" ? " small" : ""}`}>
-        <ChatSidebar />
+        <ChatSidebar
+          http={http}
+          chatHistoryList={chatHistoryList}
+          setChatHistoryList={setChatHistoryList}
+          setChatStart={setChatStart}
+          chatLoad={chatLoad}
+          setChatLoad={setChatLoad}
+          activeIndex={activeIndex}
+          setActiveIndex={setActiveIndex}
+          chatStart={chatStart}
+          chatViewRef={chatViewRef}
+        />
 
         <div className="contents">
           <ChatBotHeader textSize={textSize} setTextSize={setTextSize} />
 
           <div className={`chat-box${chatStart ? " active" : ""}`}>
-            <div className="inner">
+            <div className="inner" ref={chatViewRef}>
               {!chatStart ?
                 <>
                   <div className="start-chat">필요한 규정 정보를 찾아드릴게요.</div>
@@ -64,32 +154,28 @@ const ChatBot = () => {
                 :
                 <>
                   <div className="chat-view">
-                    <div className="chat-date">2025.11.11 화요일</div>
-                    <SendBalloon sendMessage={sendMessage} />
-                    <div className="answer">
-                      <AnswerText text={"스포츠·문화교실에서는 임직원과 가족, 유관기관 직원에게 아래와 같은 할인 제도를 운영하고 있습니다."} />
-                      <div className="number-answer">
-                        <ul>
-                          <li>
-                            <h4>1. 직원 할인</h4>
-                            <p>공단 및 체육산업 임직원(모든 종사원 포함)은 회원 드록 시 회비의 50%가 할인됩니다.</p>
-                          </li>
-                          <li>
-                            <h4>2. 직원 할인</h4>
-                            <p>공단 및 체육산업 임직원(모든 종사원 포함)은 회원 드록 시 회비의 50%가 할인됩니다.</p>
-                          </li>
-                          <li>
-                            <h4>3. 직원 할인</h4>
-                            <p>공단 및 체육산업 임직원(모든 종사원 포함)은 회원 드록 시 회비의 50%가 할인됩니다.</p>
-                          </li>
-                        </ul>
-                      </div>
-                      <AnswerDropdown text={"※ 할인제도는 「스포츠센터 회원이용약관의 기본 할인 외에 센터별로 추가 운영할 수 있으며, 신규 제도 신설이나 할인율 변경 시에는 대표이사 결재 후 시행해야 합니다.」"} accordionList={accordionList} setAccordionList={setAccordionList} />
-                      <div className="rating btn-wrap">
-                        <Button className={"like"} icon={"like"} />
-                        <Button className={"dislike"} icon={"dislike"} />
-                      </div>
-                    </div>
+                    {chatLoad.map((item) => {
+                      if(item.type === "USER"){
+                        return <SendBalloon sendMessage={item.content} />
+                      }else{
+                        return <>
+                          <div className="answer">
+                            {/*<AnswerText text={item.content} />*/}
+                            {item.citation.length > 0 ?
+                              <>
+                                <AnswerDropdown text={item.content} accordionList={item.citation} />
+                              </>
+                              :
+                              <></>
+                            }
+                            <div className="rating btn-wrap">
+                              <Button className={"like"} icon={"like"} />
+                              <Button className={"dislike"} icon={"dislike"} />
+                            </div>
+                          </div>
+                        </>
+                      }
+                    })}
                   </div>
                 </>
               }

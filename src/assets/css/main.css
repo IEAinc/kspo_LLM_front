@@ -141,7 +141,7 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .chat-bot .sidebar .new-chat{margin-top:12px;}
 .chat-bot header{width:100%;height:var(--header-height);display:flex;justify-content:space-between;align-items:center;padding:0 16px;}
 .chat-bot .chat-box{width:100%;height:calc(100% - var(--header-height));}
-.chat-bot .chat-box > .inner{width:100%;padding:16px 16px 0;overflow-y:auto;}
+.chat-bot .chat-box > .inner{width:100%;padding:16px 16px 0;overflow-y:auto;scroll-behavior:smooth;}
 .chat-bot .start-chat{width:100%;font-size:var(--fs32);font-weight:600;text-align:center;margin-top:34vh;}
 .chat-box .chat-view{max-width:768px;display:flex;flex-direction:column;gap:40px;margin:0 auto;}
 .chat-bot .chat-input-box{max-width:768px;width:100%;height:var(--chat-input-box-height);background:var(--white);display:flex;align-items:center;border:1px solid var(--border-color);border-radius:100px;padding:0 10px;margin:40px auto 0;position:relative;box-shadow: 0 4px 14px 0 rgba(0,0,0,0.05);}
@@ -179,7 +179,7 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .history-list li.active{background:var(--active-bg);}
 
 .edit-menu{display:none;width:200px;background:var(--white);border-radius:12px;padding:8px 12px;position:fixed;top:100%;left:80%;z-index:10;box-shadow:0 0 12px 0 rgba(0,0,0,0.12);cursor:default;}
-.edit-menu .btn{height:40px;}
+.edit-menu .btn{height:40px;justify-content:flex-start;}
 .edit-menu .btn + .btn{margin-top:16px;}
 .edit-menu .btn + .btn:before{content:"";width:100%;height:1px;background:var(--border-color);position:absolute;top:-8px;left:0;}
 .edit-menu.active{display:block;}
