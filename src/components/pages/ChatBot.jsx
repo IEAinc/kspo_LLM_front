@@ -22,6 +22,7 @@ const ChatBot = ({ http }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const chatViewRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const inputRef = useRef(null);
 
   /* 메시지 입력 시 값 저장 및 버튼 활성화 */
   const handleChatInputChange = (e) => {
@@ -61,6 +62,10 @@ const ChatBot = ({ http }) => {
         .then((response) => {
           setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
           setLoading(false);
+
+          setTimeout(() => {
+            inputRef.current?.focus();
+          }, 100);
         });
       }else{
         http.post("/chat/query", {
@@ -71,6 +76,10 @@ const ChatBot = ({ http }) => {
         .then((response) => {
           setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
           setLoading(false);
+
+          setTimeout(() => {
+            inputRef.current?.focus();
+          }, 100);
         });
       }
     }catch(e){
@@ -199,7 +208,15 @@ const ChatBot = ({ http }) => {
             <div className="chat-input-box">
               <Button icon={"plus"} />
               <label>
-                <input type="text" placeholder={"규정 및 지침에 대해 궁금하신 내용을 입력해주세요."} value={chatInputVal} onInput={handleChatInputChange} onKeyDown={handleEnterSend}/>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder={"규정 및 지침에 대해 궁금하신 내용을 입력해주세요."}
+                  value={chatInputVal}
+                  onInput={handleChatInputChange}
+                  onKeyDown={handleEnterSend}
+                  disabled={loading}
+                />
               </label>
               <Button className={`send${sendBtnActive ? " active" : ""}`} icon={"send"} onClick={handleSendBtnClick} />
             </div>
