@@ -73,7 +73,6 @@ const HistoryItems = (props) => {
       );
 
       try{
-        console.log("rename", rename, props.item.chatRoomId)
         props.http.put(`/room`, {
           roomId: props.item.chatRoomId,
           roomName: rename
