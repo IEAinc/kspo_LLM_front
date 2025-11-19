@@ -125,8 +125,12 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .btn .remove{background:url("../img/icon/remove.svg") no-repeat center/100%;}
 .btn .plus{background:url("../img/icon/plus.svg") no-repeat center/100%;}
 .btn.like, .btn.dislike{border-radius:50%;padding:6px;}
+.btn.like.active .like{animation-name:likeAnimation;animation-duration:800ms;}
+.btn.dislike.active .dislike{animation-name:dislikeAnimation;animation-duration:800ms;}
 .btn .like{background:url("../img/icon/like.svg") no-repeat center/100%;}
+.btn.like.active .like{background:url("../img/icon/like_on.svg") no-repeat center/100%;}
 .btn .dislike{background:url("../img/icon/dislike.svg") no-repeat center/100%;}
+.btn.dislike.active .dislike{background:url("../img/icon/dislike_on.svg") no-repeat center/100%;}
 .btn.send{background:var(--send-bg);border-radius:50%;transition:background 200ms ease-in-out;}
 .btn .send{background:url("../img/icon/send.svg") no-repeat center/100%;transition:background 200ms ease-in-out;}
 .btn.send.active{background:var(--send-active-bg);}
@@ -136,6 +140,20 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
     0%{transform:translateY(0);}
     50%{transform:translateY(-5px);}
     100%{transform:translateY(0);}
+}
+
+@keyFrames likeAnimation{
+    0%{transform:rotate(0deg) scale(1);}
+    40%{transform:rotate(-30deg) scale(2);}
+    50%{transform:rotate(-30deg) scale(2);}
+    100%{transform:rotate(0deg) scale(1);}
+}
+
+@keyFrames dislikeAnimation{
+    0%{transform:translateY(0) scale(1);}
+    40%{transform:translateY(14px) scale(2);}
+    50%{transform:translateY(14px) scale(2);}
+    100%{transform:translateY(0) scale(1);}
 }
 
 .wait-progress{width:40px;height:20px;display:flex;justify-content:center;align-items:center;gap:4px;}

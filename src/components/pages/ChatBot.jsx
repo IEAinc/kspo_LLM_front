@@ -7,6 +7,7 @@ import AnswerText from "../commons/chat/AnswerText.jsx";
 import AnswerDropdown from "../commons/chat/AnswerDropdown.jsx";
 import { generateRandomString } from "../../assets/api/commons.js";
 import WaitProgressBar from "../commons/chat/WaitProgressBar.jsx";
+import LIkesBtn from "../commons/chat/LIkesBtn.jsx";
 
 /**
  * @property {string} citation
@@ -186,10 +187,7 @@ const ChatBot = ({ http }) => {
                                 <AnswerText text={item.content} />
                               </>
                             }
-                            <div className="rating btn-wrap">
-                              <Button className={"like"} icon={"like"} />
-                              <Button className={"dislike"} icon={"dislike"} />
-                            </div>
+                            <LIkesBtn />
                           </div>
                         </>
                       }
