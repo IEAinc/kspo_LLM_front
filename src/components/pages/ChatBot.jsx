@@ -6,6 +6,7 @@ import SendBalloon from "../commons/chat/SendBalloon.jsx";
 import AnswerText from "../commons/chat/AnswerText.jsx";
 import AnswerDropdown from "../commons/chat/AnswerDropdown.jsx";
 import { generateRandomString } from "../../assets/api/commons.js";
+import WaitProgressBar from "../commons/chat/WaitProgressBar.jsx";
 
 /**
  * @property {string} citation
@@ -20,6 +21,7 @@ const ChatBot = ({ http }) => {
   const [chatLoad, setChatLoad] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const chatViewRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   /* 메시지 입력 시 값 저장 및 버튼 활성화 */
   const handleChatInputChange = (e) => {
@@ -36,6 +38,7 @@ const ChatBot = ({ http }) => {
   const chatSendProcess = () => {
     setSendBtnActive(false);
     setChatInputVal("");
+    setLoading(true);
 
     /* 보낸 메세지 바로 출력 */
     let sendData = [{ type: "USER", content: chatInputVal}]
@@ -57,7 +60,8 @@ const ChatBot = ({ http }) => {
         })
         .then((response) => {
           setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
-        })
+          setLoading(false);
+        });
       }else{
         http.post("/chat/query", {
           type: "USER",
@@ -66,7 +70,8 @@ const ChatBot = ({ http }) => {
         })
         .then((response) => {
           setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
-        })
+          setLoading(false);
+        });
       }
     }catch(e){
       console.log(e);
@@ -118,7 +123,6 @@ const ChatBot = ({ http }) => {
 
           http.get(`/history/${response.data.response[0].chatRoomId}`)
           .then((response) => {
-            console.log(response.data.response)
             setChatLoad(response.data.response);
           });
         }
@@ -162,7 +166,7 @@ const ChatBot = ({ http }) => {
                       }else{
                         return <>
                           <div className="answer">
-                            {item.citation.length > 0 ?
+                            {item.citation && item.citation.length > 0 ?
                               <>
                                 {/* 텍스트 & 드롭다운 */}
                                 <AnswerDropdown text={item.content} accordionList={item.citation} />
@@ -181,6 +185,13 @@ const ChatBot = ({ http }) => {
                         </>
                       }
                     })}
+
+                    {/* 로딩 시 나오는 Progress Bar */}
+                    {loading ?
+                      <WaitProgressBar />
+                      :
+                      null
+                    }
                   </div>
                 </>
               }

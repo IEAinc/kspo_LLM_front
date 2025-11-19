@@ -132,6 +132,16 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .btn.send.active{background:var(--send-active-bg);}
 .btn.send.active .send{background:url("../img/icon/send_white.svg") no-repeat center/100%;}
 
+@keyframes movingDot{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-5px);}
+    100%{transform:translateY(0);}
+}
+
+.wait-progress{width:40px;height:20px;display:flex;justify-content:center;align-items:center;gap:4px;}
+.wait-progress > div{width:8px;height:8px;background:var(--blue-active);border-radius:50%;position:relative;animation-name:movingDot;animation-duration:1s;animation-iteration-count:infinite;}
+.wait-progress > div:nth-child(2){animation-name:movingDot;animation-delay:200ms;animation-duration:1s;animation-iteration-count:infinite;}
+.wait-progress > div:nth-child(3){animation-name:movingDot;animation-delay:400ms;animation-duration:1s;animation-iteration-count:infinite;}
 
 .chat-bot{width:100%;height:100%;display:flex;}
 .chat-bot .contents{flex:1;position:relative;}
