@@ -26,6 +26,7 @@ const Input = ({
     isNormal = true,
     widthSize = 'full', // widthSize 추가 (기본값은 full)
     labelSize = 'full',
+    marginSize = 'none',
     fixedFull = false,
     noTransformed = false
   } = options;
@@ -40,6 +41,15 @@ const Input = ({
     full: 'w-full' // Full Width
   };
   const widthClass = widthClassMap[widthSize] || 'w-full'; // 기본값은 full
+
+  // [마진 조정]
+  const marginClassMap = {
+    none: '',
+    sm: 'mr-2',
+    md: 'mr-4',
+    lg: 'mr-6'
+  };
+  const marginClass = marginClassMap[marginSize] || '';
 
   // [라벨 사이즈]
   const labelClassMap = {
@@ -74,6 +84,7 @@ const Input = ({
           className={`
           ${isColumn ? 'text-[12px] text-gray3 font-medium text-left' : 'text-[14px] text-black font-bold text-left'}
           ${labelClass}
+          ${marginClass}
         `}
         >
           {labelName}
