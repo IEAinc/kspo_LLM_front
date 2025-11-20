@@ -41,6 +41,10 @@ export const API_ENDPOINT = {
   LOGOUT: "/admin/logout",
   DOCS_PAGE: "/admin/docs",
   ADMIN_USER_PAGE: "/admin/user/page",
+  ADMIN_USER_INSERT: "/admin/user/insert",
+  ADMIN_USER_UPDATE: "/admin/user/update",
+  ADMIN_USER_DELETE: "/admin/user/delete",
+  ADMIN_USER_DETAIL: "/admin/user", // usage: `${ADMIN_USER_DETAIL}/${userId}`
   ANSWER_HISTORY: "/admin/history",
   HISTORY_USAGE: "/admin/history/usage",
   VALIDATE_TOKEN: "/admin/validateToken",

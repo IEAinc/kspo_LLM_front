@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { API_ENDPOINT, http } from '../../../../assets/api/commons.js';
 import CustomAlert from '../../../commons/admin/CustomAlert.jsx';
 import Box from '../../../commons/admin/boxs/Box.jsx';
@@ -8,6 +8,7 @@ import AdminUserSearchBox from '../../../commons/admin/boxs/AdminUserSearchBox.j
 
 const AdminManagement = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Alert 상태
   const [alertState, setAlertState] = useState({
@@ -71,8 +72,8 @@ const AdminManagement = () => {
       const mapped = content.map((it) => {
         const emailText = typeof it.email === 'string' ? it.email : (it.email?.value || it.email?.address || '');
         return {
-          id: it.adminSeq,
-          ...it,
+          rowKey: it.adminSeq, // 그리드 내부 키
+          ...it,               // 유지: id = 로그인 아이디
           email: emailText,
         };
       });
@@ -109,15 +110,7 @@ const AdminManagement = () => {
   };
 
   const handleRegisterClick = () => {
-    setAlertState({
-      isOpen: true,
-      title: '안내',
-      message: '등록 기능은 추후 제공 예정입니다.',
-      iconMode: 'warn',
-      confirmButton: { text: '확인', colorMode: true },
-      cancelButton: false,
-      onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
-    });
+    navigate('/ksponcoadministrator/adminManagement/register', { state: { mode: 'register' } });
   };
 
   const onEditClick = (gridApi) => {
@@ -134,15 +127,9 @@ const AdminManagement = () => {
       });
       return;
     }
-    setAlertState({
-      isOpen: true,
-      title: '안내',
-      message: '수정 기능은 추후 제공 예정입니다.',
-      iconMode: 'warn',
-      confirmButton: { text: '확인', colorMode: true },
-      cancelButton: false,
-      onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
-    });
+    const row = selectedRows[0];
+    // row.id는 로그인 아이디를 의미함 (상세 조회 키)
+    navigate('/ksponcoadministrator/adminManagement/register', { state: { mode: 'update', userId: row.id } });
   };
 
   return (
