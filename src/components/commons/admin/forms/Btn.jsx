@@ -1,4 +1,5 @@
 import ExcelIcon from '../../../../assets/img/icon/excel.svg';
+import ResetIcon from '../../../../assets/img/icon/reset.svg';
 
 const Btn = ({ type = 'button', size = 'sm', isFull, textColor, colorMode = false, iconMode = '', minWidth, children, onClick }) => {
   const sizeMap = {
@@ -11,7 +12,7 @@ const Btn = ({ type = 'button', size = 'sm', isFull, textColor, colorMode = fals
   };
   const height = sizeMap[size] || sizeMap.sm;
 
-  let IconComponent = iconMode === 'excel' ? ExcelIcon : null;
+  let IconComponent = iconMode === 'excel' ? ExcelIcon : iconMode === 'reset' ? ResetIcon : null;
 
   const paddingMap = {
     xxs: 'px-[8px] py-[5px]',

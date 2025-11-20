@@ -1,81 +1,108 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import Box from './Box.jsx';
+import Btn from '../../admin/forms/Btn.jsx';
+import Input from '../../admin/forms/Input.jsx';
+import Select from '../../admin/forms/Select.jsx';
+import CustomDatePicker from "../forms/CustomDatepicker.jsx";
 
-// Admin 전용 간단 검색 박스 (Tailwind 사용)
+// Admin 전용 검색 박스 (Box, Btn, Input, Select 사용)
 // props: defaultSearch { docType, fileName, startDate, endDate }, onSearch(criteria)
 const AdminSearchBox = ({ defaultSearch, onSearch }) => {
-  const [docType, setDocType] = useState(defaultSearch?.docType || '');
+  // 셀렉트 옵션 (문서 유형)
+  const docTypeOptions = useMemo(() => ([
+    { value: '', name: '전체', label: '전체' },
+    { value: 'BASE', name: '기본규정', label: '기본규정' },
+    { value: 'GA', name: '총무', label: '총무' },
+    { value: 'HRP', name: '인사', label: '인사' },
+    { value: 'ACC', name: '회계', label: '회계' },
+    { value: 'BIZ', name: '사업', label: '사업' },
+    { value: 'ETC', name: '기타', label: '기타' },
+  ]), []);
+
+  const defaultDocTypeValue = useMemo(() => {
+    const found = docTypeOptions.find(o => o.value === (defaultSearch?.docType ?? ''));
+    return found || docTypeOptions[0];
+  }, [defaultSearch?.docType, docTypeOptions]);
+
+  const [docType, setDocType] = useState(defaultDocTypeValue);
   const [fileName, setFileName] = useState(defaultSearch?.fileName || '');
-  const [startDate, setStartDate] = useState(defaultSearch?.startDate || '');
-  const [endDate, setEndDate] = useState(defaultSearch?.endDate || '');
+
+  const parseDateString = (s) => {
+    if (!s) return null;
+    const d = new Date(s);
+    return isNaN(d.getTime()) ? null : d;
+  };
+  const [startDate, setStartDate] = useState(parseDateString(defaultSearch?.startDate));
+  const [endDate, setEndDate] = useState(parseDateString(defaultSearch?.endDate));
+
+  const formatYmd = (d) => {
+    if (!d) return null;
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   const submit = (e) => {
     e?.preventDefault?.();
     onSearch?.({
       page: 0,
       size: 10,
-      docType: docType || null,
-      fileName: fileName || null,
-      startDate: startDate || null,
-      endDate: endDate || null,
+      docType: (docType?.value ?? '') || null,
+      fileName: (fileName ?? '') || null,
+      startDate: formatYmd(startDate),
+      endDate: formatYmd(endDate),
     });
   };
+
   const reset = () => {
-    setDocType('');
+    const init = docTypeOptions[0]; // 전체
+    setDocType(init);
     setFileName('');
-    setStartDate('');
-    setEndDate('');
+    setStartDate(null);
+    setEndDate(null);
     onSearch?.({ page: 0, size: 10, docType: null, fileName: null, startDate: null, endDate: null });
   };
 
   return (
-    <form onSubmit={submit} className="w-full rounded-[8px] border border-br-gray3 bg-white p-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-        <div className="flex flex-col">
-          <label className="text-[14px] text-gray mb-1">문서 유형 (docType)</label>
-          <input
-            value={docType}
-            onChange={(e) => setDocType(e.target.value)}
-            placeholder="예: BASE"
-            className="border border-br-gray rounded px-3 py-2"
-          />
+    <Box padding={{ px: 16, py: 16 }}>
+      <div className="flex flex-col lg:flex-row lg:justify-between">
+        <div className="flex flex-col gap-1 lg:items-start">
+          <div className="flex flex-wrap items-center gap-[20px] md:flex-row lg:flex-1 lg:flex-row lg:gap-[40px] lg:mt-[0]">
+            <CustomDatePicker
+                options={{ widthSize: 'md', labelSize: 'sm' }}
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={setStartDate}
+                onEndDateChange={setEndDate}
+            />
+
+            <Select
+              label="문서 유형"
+              value={docType}
+              onChange={setDocType}
+              options={docTypeOptions}
+              uiOptions={{ widthSize: 'md', labelSize: 'lg' }}
+            />
+
+            <Input
+              labelName="파일명"
+              type="text"
+              name="fileName"
+              placeholder="파일명을 입력하세요"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              options={{ isNormal: true, widthSize: 'lg', labelSize: 'sm' }}
+            />
+          </div>
         </div>
-        <div className="flex flex-col">
-          <label className="text-[14px] text-gray mb-1">파일명</label>
-          <input
-            value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
-            placeholder="파일명을 입력하세요"
-            className="border border-br-gray rounded px-3 py-2"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-[14px] text-gray mb-1">시작일</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            className="border border-br-gray rounded px-3 py-2"
-          />
-        </div>
-        <div className="flex flex-col">
-          <label className="text-[14px] text-gray mb-1">종료일</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            className="border border-br-gray rounded px-3 py-2"
-          />
+
+        <div className="w-full flex items-center justify-end gap-[8px] mt-[10px] lg:w-auto lg:mt-[0] lg:justify-end">
+          <Btn size="sm" minWidth="86px" iconMode="reset" onClick={reset}>초기화</Btn>
+          <Btn type="submit" size="sm" onClick={submit}>검색</Btn>
         </div>
       </div>
-      <div className="mt-3 flex gap-2 justify-end">
-        <button type="button" onClick={reset} className="px-3 py-2 rounded border border-br-gray text-[14px]">
-          초기화
-        </button>
-        <button type="submit" className="px-3 py-2 rounded bg-primary-color text-white text-[14px]">
-          검색
-        </button>
-      </div>
-    </form>
+    </Box>
   );
 };
 
