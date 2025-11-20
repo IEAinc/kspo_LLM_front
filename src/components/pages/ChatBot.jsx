@@ -7,7 +7,7 @@ import AnswerText from "../commons/chat/AnswerText.jsx";
 import AnswerDropdown from "../commons/chat/AnswerDropdown.jsx";
 import { generateRandomString } from "../../assets/api/commons.js";
 import WaitProgressBar from "../commons/chat/WaitProgressBar.jsx";
-import LIkesBtn from "../commons/chat/LIkesBtn.jsx";
+import LikesBtn from "../commons/chat/LikesBtn.jsx";
 
 /**
  * @property {string} citation
@@ -104,16 +104,6 @@ const ChatBot = ({ http }) => {
 
   /* 새 채팅 및 채팅 시 마다 리스트 업데이트 */
   useEffect(() => {
-    try{
-      http.get("/room/all")
-      .then((response) => {
-        setChatHistoryList(response.data.response.reverse());
-      });
-
-    }catch(e){
-      console.log(e);
-    }
-
     /* 스크롤 내리기 */
     if(chatViewRef.current){
       chatViewRef.current.scrollTop = chatViewRef.current.scrollHeight;
@@ -170,12 +160,12 @@ const ChatBot = ({ http }) => {
                 :
                 <>
                   <div className="chat-view">
-                    {chatLoad.map((item) => {
+                    {chatLoad.map((item, idx) => {
                       if(item.type === "USER"){
-                        return <SendBalloon sendMessage={item.content} />
+                        return <SendBalloon sendMessage={item.content} key={`user-${idx}`} />
                       }else{
-                        return <>
-                          <div className="answer">
+                        return (
+                          <div className="answer" key={`ans-${idx}`}>
                             {item.citation && item.citation.length > 0 ?
                               <>
                                 {/* 텍스트 & 드롭다운 */}
@@ -187,9 +177,10 @@ const ChatBot = ({ http }) => {
                                 <AnswerText text={item.content} />
                               </>
                             }
-                            <LIkesBtn />
+                            {/* historySeq와 http 전달 */}
+                            <LikesBtn http={http} historySeq={item.historySeq} />
                           </div>
-                        </>
+                        )
                       }
                     })}
 
