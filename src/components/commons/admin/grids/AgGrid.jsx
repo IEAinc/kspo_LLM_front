@@ -184,19 +184,19 @@ const AgGrid = (props) => {
             gridRef.current = params.api;
             setGridApi(params.api);
             console.log(params.api);
-            const checkboxColumn = params.api.getAllGridColumns().find(col => col.getColDef().checkboxSelection);
+            const checkboxColumn = params.api.getAllGridColumns().find(col => col.getColDef().colId === "ag-Grid-SelectionColumn");
             if (checkboxColumn) {
               // 너비 50으로 고정
-              params.api.setColumnWidths(50);
+                params.api.setColumnWidths( [{ key: checkboxColumn.getId(), newWidth: 50 }]);
             }
 
             const allColumns = params.api.getAllGridColumns();
-            const autoSizeColumnIds = allColumns.filter((col) => !col.getColDef().checkboxSelection).map((col) => col.getId());
+            const autoSizeColumnIds = allColumns.filter((col) => col.getColDef().colId !== "ag-Grid-SelectionColumn").map((col) => col.getId());
             params.api.autoSizeColumns(autoSizeColumnIds);
           }}
           onFirstDataRendered={(params) => {
             const allColumns = params.api.getAllGridColumns();
-            const autoSizeColumnIds = allColumns.filter((col) => !col.getColDef().checkboxSelection).map((col) => col.getId());
+            const autoSizeColumnIds = allColumns.filter((col) => col.getColDef().colId !== "ag-Grid-SelectionColumn").map((col) => col.getId());
             params.api.autoSizeColumns(autoSizeColumnIds);
           }}
           onGridSizeChanged={(params) => {

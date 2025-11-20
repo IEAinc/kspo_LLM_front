@@ -9,7 +9,7 @@ const PageSizeSelector = ({ pageSize, onPageSizeChange, width = '80px' }) => {
     >
       {options.map((opt) => (
         <option key={opt} value={opt}>
-          {opt} / page
+          {opt}
         </option>
       ))}
     </select>

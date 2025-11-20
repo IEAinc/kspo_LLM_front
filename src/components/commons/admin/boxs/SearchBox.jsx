@@ -6,7 +6,6 @@ import Select from '../../admin/forms/Select.jsx';
 import CustomDatePicker from "../forms/CustomDatepicker.jsx";
 
 // Admin 전용 검색 박스 (Box, Btn, Input, Select 사용)
-// props: defaultSearch { docType, fileName, startDate, endDate }, onSearch(criteria)
 const AdminSearchBox = ({ defaultSearch, onSearch }) => {
   // 셀렉트 옵션 (문서 유형)
   const docTypeOptions = useMemo(() => ([

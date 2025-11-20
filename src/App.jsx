@@ -4,6 +4,7 @@ import Login from "./components/pages/admin/Login.jsx";
 import { http } from "./assets/api/commons.js";
 import Layout from "./components/pages/admin/Layout.jsx";
 import DocumentManagement from "./components/pages/admin/document/DocumentManagement.jsx";
+import AdminManagement from "./components/pages/admin/admin/AdminManagement.jsx";
 
 const App = () => {
 
@@ -23,6 +24,9 @@ const App = () => {
           <Route path="/ksponcoadministrator" element={<Layout />}>
             {/* 문서 관리 */}
             <Route path="document" element={<DocumentManagement />} />
+
+            {/* 관리자 관리 */}
+            <Route path="adminManagement" element={<AdminManagement />} />
           </Route>
         </Routes>
       </Router>
