@@ -6,6 +6,7 @@ import Layout from "./components/pages/admin/Layout.jsx";
 import DocumentManagement from "./components/pages/admin/document/DocumentManagement.jsx";
 import AdminManagement from "./components/pages/admin/admin/AdminManagement.jsx";
 import AnswerHistoryManagement from "./components/pages/admin/history/AnswerHistoryManagement.jsx";
+import ChatbotUsageStatusManagement from "./components/pages/admin/history/ChatbotUsageStatusManagement.jsx";
 
 const App = () => {
 
@@ -31,6 +32,7 @@ const App = () => {
 
             {/* 이력 관리 */}
             <Route path="history/userQueryAnswerHistory" element={<AnswerHistoryManagement />} />
+            <Route path="history/chatbotUsageStatus" element={<ChatbotUsageStatusManagement />} />
           </Route>
         </Routes>
       </Router>

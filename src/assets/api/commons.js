@@ -42,6 +42,7 @@ export const API_ENDPOINT = {
   DOCS_PAGE: "/admin/docs",
   ADMIN_USER_PAGE: "/admin/user/page",
   ANSWER_HISTORY: "/admin/history",
+  HISTORY_USAGE: "/admin/history/usage",
   VALIDATE_TOKEN: "/admin/validateToken",
   LIKE: "/evaluation",
   ALL_ROOM: "/room/all",
