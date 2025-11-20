@@ -3,6 +3,7 @@ import ChatBot from "./components/pages/ChatBot.jsx";
 import Login from "./components/pages/admin/Login.jsx";
 import { http } from "./assets/api/commons.js";
 import Layout from "./components/pages/admin/Layout.jsx";
+import DocumentManagement from "./components/pages/admin/document/DocumentManagement.jsx";
 
 const App = () => {
 
@@ -20,10 +21,8 @@ const App = () => {
 
           {/*<Route path="*" element={<NotFound />} />*/}
           <Route path="/ksponcoadministrator" element={<Layout />}>
-
             {/* 문서 관리 */}
-            <Route path="/ksponcoadministrator/document"
-                   element={<Navigate to="/ksponcoadministrator/document" replace />} />
+            <Route path="document" element={<DocumentManagement />} />
           </Route>
         </Routes>
       </Router>

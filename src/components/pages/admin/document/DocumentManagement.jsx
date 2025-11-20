@@ -1,96 +1,215 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useLocation} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {API_ENDPOINT, http} from '../../../../assets/api/commons.js';
+import CustomAlert from '../../../commons/admin/CustomAlert.jsx';
+import Box from "../../../commons/admin/boxs/Box.jsx";
+import AgGrid from "../../../commons/admin/grids/AgGrid.jsx";
+import AdminSearchBox from "../../../commons/admin/boxs/SearchBox.jsx";
+import Btn from "../../../commons/admin/forms/Btn.jsx";
 
 const DocumentManagement = () => {
-    //모달 관련련
-    const [modalText, setModalText] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    // 모달 임시추가
-    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
-    const handleOpen = () => setIsModalOpen(true);
-    const handleClose = () => setIsModalOpen(false);
-    const [userCompany, setUserCompany] = useState("");
-    const [userId, setUserId] = useState("");
-    // CustomAlert 상태 관리
-    const [alertState, setAlertState] = useState({
-        isOpen: false,
-        title: '',
-        type: 'info',
-        message: '',
-        iconMode: 'warn',
-        confirmButton: true,
-        cancelButton: true,
-        onConfirm: () => {
+  // Alert 상태
+  const [alertState, setAlertState] = useState({
+    isOpen: false,
+    title: '',
+    type: 'info',
+    message: '',
+    iconMode: 'warn',
+    confirmButton: false,
+    cancelButton: false,
+    onConfirm: undefined,
+    onCancel: undefined,
+  });
+
+  const hideAlert = () => setAlertState((prev) => ({ ...prev, isOpen: false }));
+
+  // Grid 상태
+  const [gridData, setGridData] = useState([]);
+  const [gridColumns, setGridColumns] = useState([]);
+  const [searchParams, setSearchParams] = useState({ page: 0, size: 10, docType: null, fileName: null, startDate: null, endDate: null });
+
+  const handleRowClick = (id) => {
+    const basePath = location.pathname; // 현재 경로 가져오기
+    navigate(`${basePath}/detail/${String(id)}`); // 동적 경로 생성
+  }
+
+  const dateFormatter = (params) => {
+    if (!params.value) return '';
+    const date = new Date(params.value);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // 컬럼 정의
+  useEffect(() => {
+    setGridColumns([
+      { headerName: 'NO', field: "number", cellClass: 'text-center', width: 70 ,suppressSizeToFit: true,
+        valueGetter: (params) => {
+          try {
+            const rowIndex = params.node.rowIndex;
+            const { currentPage = 1, pageSize = 10 } = params?.context || {};
+            const base = (currentPage - 1) * pageSize;
+            return base + rowIndex + 1;
+          } catch {
+            return params.node.rowIndex + 1;
+          }
         },
-        onCancel: () => {
-        }
+      },
+      { headerName: '문서유형', field: 'docTypeName', flex: 1, cellClass: 'text-center', width: 90},
+      { headerName: '파일명', field: 'fileName', flex: 1, cellClass: 'text-center'},
+      {
+        headerName: '사용 여부', field: 'useYn', flex: 1, cellClass: 'text-center', width: 90,
+        valueFormatter: (p) => (p.value === 'Y' ? '사용' : '미사용')
+      },
+      { headerName: '등록자', field: 'id', flex: 1, cellClass: 'text-center', width: 60},
+      { headerName: '등록일', field: 'created', valueFormatter: (p) => (dateFormatter(p)), flex: 1, cellClass: 'text-center', width: 120},
+      { headerName: '수정자', field: 'updatedId', flex: 1, cellClass: 'text-center', width: 60},
+      { headerName: '수정일', field: 'updated', valueFormatter: (p) => (dateFormatter(p)), flex: 1, cellClass: 'text-center', width: 120},
+      {
+        headerName: "상세보기",
+        field: 'regulationDocsSeq',
+        width: 100,
+        suppressSizeToFit: true,
+        cellClass: 'flex-center',
+        cellRenderer: (params) => {
+          return (
+              <Btn size="xxs" onClick={() => handleRowClick(params.data.regulationDocsSeq)}>
+                상세보기
+              </Btn>
+          );
+        },
+      },
+    ]);
+  }, []);
+
+  // 데이터 조회
+  const fetchDocuments = async (criteria) => {
+    const params = { ...(criteria || searchParams) };
+    setSearchParams(params);
+    try {
+      const res = await http.get(API_ENDPOINT.DOCS_PAGE, {
+        params: {
+          page: params.page ?? 0,
+          size: params.size ?? 10,
+          docType: params.docType || undefined,
+          fileName: params.fileName || undefined,
+          startDate: params.startDate || undefined,
+          endDate: params.endDate || undefined,
+        },
+      });
+
+      // 서버 응답 매핑
+      const body = res?.data?.response || {};
+      console.log(body);
+      const content = Array.isArray(body?.content) ? body.content : [];
+      const mapped = content.map((it) => ({
+        id: it.regulationDocsSeq, // 그리드 선택/삭제용 고유키
+        ...it,
+      }));
+      setGridData(mapped);
+    } catch (e) {
+      setAlertState({
+        isOpen: true,
+        title: '오류',
+        message: '문서 목록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
+        iconMode: 'warn',
+        confirmButton: { text: '확인', colorMode: true },
+        cancelButton: false,
+        onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+      });
+    }
+  };
+
+  // 최초 로드 시 목록 조회
+  useEffect(() => {
+    fetchDocuments(searchParams);
+  }, [location.pathname]);
+
+  // Grid 이벤트 핸들러 (필요 시 확장)
+  const handleDataUpdate = () => {
+    setAlertState({
+      isOpen: true,
+      title: '안내',
+      message: '삭제 기능은 추후 제공 예정입니다.',
+      iconMode: 'warn',
+      confirmButton: { text: '확인', colorMode: true },
+      cancelButton: false,
+      onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
     });
-    useEffect(() => {
-    }, [location.pathname])
-    // Alert 닫기 함수
-    const hideAlert = () => {
-        setAlertState({
-            ...alertState,
-            isOpen: false
-        });
-    };
-    // 확인 버튼 클릭 동작
-    const handleConfirm = () => {
-        setIsModalOpen(false); // 모달 닫기
-    };
+  };
+  const handleRegisterClick = () => {
+    setAlertState({
+      isOpen: true,
+      title: '안내',
+      message: '등록 기능은 추후 제공 예정입니다.',
+      iconMode: 'warn',
+      confirmButton: { text: '확인', colorMode: true },
+      cancelButton: false,
+      onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+    });
+  };
+  const onEditClick = (gridApi) => {
+    const selectedRows = gridApi?.getSelectedRows?.() || [];
+    if (selectedRows.length !== 1) {
+      setAlertState({
+        isOpen: true,
+        title: '경고',
+        message: selectedRows.length === 0 ? '수정할 항목을 선택하세요.' : '수정은 1개 항목만 가능합니다.',
+        iconMode: 'warn',
+        confirmButton: { text: '확인', colorMode: true },
+        cancelButton: false,
+        onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+      });
+      return;
+    }
+    setAlertState({
+      isOpen: true,
+      title: '안내',
+      message: '수정 기능은 추후 제공 예정입니다.',
+      iconMode: 'warn',
+      confirmButton: { text: '확인', colorMode: true },
+      cancelButton: false,
+      onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+    });
+  };
 
-    // 취소 버튼 클릭 동작
-    const handleCancel = () => {
-        setIsModalOpen(false); // 모달 닫기
-    };
+  return (
+    <div>
+      <div className="w-full mb-[16px]">
+        <AdminSearchBox defaultSearch={searchParams} onSearch={fetchDocuments} />
+      </div>
+      <Box>
+        <AgGrid
+          rowDeselection={true}
+          rowData={gridData}
+          columnDefs={gridColumns}
+          height={463}
+          indicator={{ excel: true, edit: true, register: true, delete: true }}
+          isCheckboxMode={true}
+          onDataUpdate={handleDataUpdate}
+          onRegisterClick={handleRegisterClick}
+          onEditClick={onEditClick}
+          sortable={true}
+        />
+      </Box>
+      <CustomAlert
+        title={alertState.title}
+        iconMode={alertState.iconMode}
+        message={alertState.message}
+        onClose={hideAlert}
+        isOpen={alertState.isOpen}
+        confirmButton={alertState.confirmButton}
+        cancelButton={alertState.cancelButton}
+        onConfirm={alertState.onConfirm}
+        onCancel={alertState.onCancel}
+      />
+    </div>
+  );
+};
 
-    /* AgGrid */
-    const [gridData, setGridData] = useState([]);
-    const [gridColumns, setGridColumns] = useState([]);
-    const [gridCount, setGridCount] = useState(0);
-    const [searchText, setSearchText] = useState(null);
-    const [selectedCompany, setSelectedCompany] = useState(null);
-    const [selectedName, setSelectedName] = useState(null);
-
-    // 최종 반환
-    return (
-        <div>
-            {/*<div className="w-full mb-[16px]">
-                <SearchWrap onSearch={fetchListData}/>
-            </div>
-            <Box>
-                <AgGrid
-                    rowDeselection={true}
-                    rowData={gridData}
-                    columnDefs={gridColumns}
-                    height={463}
-                    indicator={{
-                        excel: true,
-                        edit: true,
-                        register: true,
-                        delete: true,
-                    }}
-                    isCheckboxMode={true}
-                    onDataUpdate={handleDataUpdate}
-                    onRegisterClick={handleRegisterClick}
-                    onEditClick={onEditClick}
-                    sortable={true}
-                />
-            </Box>
-            <CustomAlert
-                title={alertState.title}
-                iconMode={alertState.iconMode}
-                message={alertState.message}
-                onClose={hideAlert}
-                isOpen={alertState.isOpen}
-                confirmButton={alertState.confirmButton}
-                cancelButton={alertState.cancelButton}
-                onConfirm={alertState.onConfirm}
-                onCancel={alertState.onCancel}
-            />*/}
-        </div>
-    );
-}
 export default DocumentManagement;

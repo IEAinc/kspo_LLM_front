@@ -3,3 +3,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.react-datepicker-wrapper {width: 100%; /* 부모의 너비를 100%로 확장 */}
+.react-datepicker__close-icon {right:22px!important;}
+/* AG grid */
+.ag-theme-alpine {font-family: 'Pretendard', sans-serif!important;}
+.ag-root-wrapper {border-color:#E4E4E4!important;border-radius:4px!important;}
+.ag-header, .ag-advanced-filter-header{border-bottom-color:#E4E4E4!important;}
+.ag-header-cell-label {justify-content: center;}
+.ag-header-cell {background-color:#F5F5F5!important;}
+.ag-header-cell + .ag-header-cell {border-left:1px solid #E4E4E4!important;}
+.ag-header-cell-text {font-size:14px!important;color:#666666!important;}
+.ag-theme-alpine .ag-row .ag-cell:first-child{border-left:0!important;}
+.ag-ltr .ag-cell {border-left:1px solid #E4E4E4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ag-ltr .ag-cell.flex-center{display:flex;align-items:center;justify-content:center;}
+.ag-ltr .ag-cell.custom-checkbox .ag-cell-wrapper {width: 100%;}
+.ag-ltr .ag-cell.text-center{justify-content: center;}
+.ag-row:nth-child(odd), .ag-row:nth-child(even) {background-color: #ffffff !important; /* 모든 행을 동일한 색으로 설정 */}
+/* 셀 체크박스 중앙 정렬 */
+.ag-center-checkbox-header {display: flex;align-items: center;justify-content: center;}
+.center-header-checkbox .ag-header-cell-comp-wrapper {display: none!important;align-items: center;justify-content: center;}
+.ag-header-cell.ag-center-checkbox-header {padding: 0 !important;}
+.ag-header-cell.ag-center-checkbox-header .ag-header-select-all {margin: 0 auto;display: flex;align-items: center;justify-content: center;}
+.ag-ltr .ag-header-select-all{width: 100%!important;justify-content:center;margin-right:0!important;}
+.ag-selection-checkbox {width: 100%;justify-content:center;}
+.ag-checkbox-selection-cell {display: flex !important;justify-content: center;align-items: center;}
+.ag-checkbox-input-wrapper::after {color:#e0e0e0!important;}
+.ag-checkbox-input-wrapper.ag-checked::after{color:#2D72E2!important;}
+.ag-row-selected {background-color: #E4E4E4!important;}
+.ag-ltr .ag-cell-focus:not(.ag-cell-range-selected):focus-within {border:1px solid #2d72e2 !important;}

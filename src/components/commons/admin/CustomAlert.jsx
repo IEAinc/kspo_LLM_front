@@ -1,9 +1,9 @@
 // 사용한 컴포넌트 모음
-import Btn from '../forms/Btn';
+import Btn from './forms/Btn.jsx';
 // 사용한 이미지 모음
-import WarnIcon from '../../assets/img/icon/exclamation.svg?react';
-import CompleteIcon from '../../assets/img/icon/complete.svg?react';
-import CancelIcon from '../../assets/img/icon/cancel.svg?react';
+import WarnIcon from '../../../assets/img/icon/exclamation.svg';
+import CompleteIcon from '../../../assets/img/icon/complete.svg';
+import CancelIcon from '../../../assets/img/icon/cancel.svg';
 import React from "react";
 
 const ICON_MODES = {
@@ -53,7 +53,7 @@ const CustomAlert = ({
         >
             <div className="custom-alert">
                 <div className="custom-alert-header">
-                    {IconComponent && <IconComponent className="icon" />}
+                    {IconComponent && <img src={`${IconComponent}`} alt="" className="icon" />}
                     <span className="title">{title}</span>
                 </div>
                 <div className="custom-alert-message">

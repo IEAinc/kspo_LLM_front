@@ -41,7 +41,8 @@ export default function Layout() {
             {/* 사이드바 */}
             <AdminSidebar/>
             {/* 콘텐츠 */}
-            <div className="admin-content">
+            <div className="mt-[48px] ml-[220px] p-[32px] bg-primary-blue-light"
+                 style={{minHeight: 'calc(100vh - 48px)', overflowY: 'auto'}}>
                 {/* 브레드크럼 추가 */}
                 <div>
                     {/*<Breadcrumb/>*/}

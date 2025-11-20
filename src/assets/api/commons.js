@@ -39,6 +39,7 @@ export const API_ENDPOINT = {
   CHAT_QUERY: "/chat/query",
   LOGIN: "/admin/login",
   LOGOUT: "/admin/logout",
+  DOCS_PAGE: "/admin/docs",
   VALIDATE_TOKEN: "/admin/validateToken",
   LIKE: "/evaluation",
   ALL_ROOM: "/room/all",
