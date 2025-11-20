@@ -5,7 +5,7 @@ import Button from "../commons/Button.jsx";
 import SendBalloon from "../commons/chat/SendBalloon.jsx";
 import AnswerText from "../commons/chat/AnswerText.jsx";
 import AnswerDropdown from "../commons/chat/AnswerDropdown.jsx";
-import { generateRandomString } from "../../assets/api/commons.js";
+import {API_ENDPOINT, generateRandomString} from "../../assets/api/commons.js";
 import WaitProgressBar from "../commons/chat/WaitProgressBar.jsx";
 import LikesBtn from "../commons/chat/LikesBtn.jsx";
 
@@ -55,7 +55,7 @@ const ChatBot = ({ http }) => {
         setChatStart(true);
         setActiveIndex(0);
 
-        http.post("/chat/query", {
+        http.post(API_ENDPOINT.CHAT_QUERY, {
           type: "USER",
           content: chatInputVal,
           chatRoomId: createRoomId
@@ -69,7 +69,7 @@ const ChatBot = ({ http }) => {
           }, 100);
         });
       }else{
-        http.post("/chat/query", {
+        http.post(API_ENDPOINT.CHAT_QUERY, {
           type: "USER",
           content: chatInputVal,
           chatRoomId: chatHistoryList[0].chatRoomId
@@ -113,7 +113,7 @@ const ChatBot = ({ http }) => {
   /* 처음 화면 로딩 시 채팅 목록이 있으면 첫번째 요소 하이라이트 */
   useEffect(() => {
     try{
-      http.get("/room/all")
+      http.get(API_ENDPOINT.ALL_ROOM)
       .then((response) => {
         setChatHistoryList(response.data.response.reverse());
 

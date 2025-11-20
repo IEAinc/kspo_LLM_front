@@ -1,46 +1,5 @@
 @import "font.css";
-
-:root{
-    --scroll-thumb:#444;
-    --scroll-background:#ddd;
-
-    --white:#fff;
-    --red:#ff453a;
-    --blue:#0189ff;
-    --blue-active:#0278dd;
-    --border-color:#efefef;
-    --outline-border-color:#d3d3d3;
-    --menu-bg:#fafafa;
-    --hover-bg:#f0f0f0;
-    --active-bg:#e8e8e8;
-    --send-bg:#f0f0f0;
-    --send-active-bg:#1e1e1e;
-    --disabled:#f2f2f2;
-
-    --text-color14:#141414;
-    --text-color45:#454545;
-    --text-color72:#727272;
-    --text-color97:#979797;
-    --text-colora8:#a8a8a8;
-    --text-color1e:#1e1e1e;
-    --fs32:32px;
-    --fs28:28px;
-    --fs24:24px;
-    --fs20:20px;
-    --fs16:16px;
-    --fs14:14px;
-    --fs12:12px;
-
-    --header-height:60px;
-    --sidebar-width:280px;
-    --sidebar-closed-width:60px;
-    --sidebar-top-height:90px;
-    --chat-input-box-height:56px;
-    --icon-size:20px;
-
-    --chat-balloon-bg:#e8e8e8;
-    --accordion-bg:#fafafa;
-}
+@import "root.css";
 
 .chat-bot.large{
     --fs32:34px;
@@ -227,3 +186,17 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .alert-box p{color:var(--text-color72);font-size:var(--fs20);font-weight:500;margin-top:8px;}
 .alert-box .btn-wrap{width:100%;margin-top:40px;}
 .alert-box .btn-wrap > *{max-width:200px;height:60px;font-size:var(--fs20);border-radius:4px;}
+
+/* CustomAlert (Tailwind 제거 버전) */
+.custom-alert-overlay{position:fixed;top:0;left:0;width:100%;min-height:100vh;background:rgba(0,0,0,0.25);z-index:100002;opacity:0;visibility:hidden;transition:opacity 200ms ease-in-out, visibility 200ms ease-in-out;}
+.custom-alert-overlay.open{opacity:1;visibility:visible;}
+
+.custom-alert{width:100%;max-width:400px;background:var(--white);border-radius:8px;padding:24px 28px;position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);box-shadow:0 10px 24px rgba(0,0,0,0.08);}
+
+.custom-alert-header{display:flex;align-items:center;gap:3px;margin-bottom:16px;}
+.custom-alert-header .icon{margin-right:2px;width:16px;height:16px;}
+.custom-alert-header .title{color:var(--text-color14);font-size:20px;font-weight:700;}
+
+.custom-alert-message{color:var(--text-color72);font-size:16px;font-weight:500;white-space:pre-line;}
+
+.custom-alert-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:20px;}

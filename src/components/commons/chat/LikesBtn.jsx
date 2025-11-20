@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "../Button.jsx";
+import {API_ENDPOINT} from "../../../assets/api/commons.js";
 
 const LikesBtn = ({ http, historySeq }) => {
   const [likeBtn, setLikeBtn] = useState(false);
@@ -19,24 +20,17 @@ const LikesBtn = ({ http, historySeq }) => {
     }
   }
 
-  const likeClick = async () => {
-    if(!http || historySeq === undefined || historySeq === null) return;
-
-    try{
-        const payload = { historySeq, point: 5, comment: "" };
-        const res = await http.post("/evaluation", payload);
-        handleResponse(res.data.response);
-    }catch(e){
-      console.error(e);
-    }
+  const LIKE_POINT = {
+    LIKE: 5,
+    DISLIKE: 0
   }
 
-  const dislikeClick = async () => {
+  const likeClick = async (point) => {
     if(!http || historySeq === undefined || historySeq === null) return;
 
     try{
-        const payload = { historySeq, point: 0, comment: "" };
-        const res = await http.post("/evaluation", payload);
+        const payload = { historySeq, point: point, comment: "" };
+        const res = await http.post(API_ENDPOINT.LIKE, payload);
         handleResponse(res.data.response);
     }catch(e){
       console.error(e);
@@ -45,8 +39,8 @@ const LikesBtn = ({ http, historySeq }) => {
 
   return (
     <div className="rating btn-wrap">
-      <Button className={`like${likeBtn ? " active" : ""}`} icon={"like"} onClick={() => likeClick()} />
-      <Button className={`dislike${dislikeBtn ? " active" : ""}`} icon={"dislike"} onClick={() => dislikeClick()} />
+      <Button className={`like${likeBtn ? " active" : ""}`} icon={"like"} onClick={() => likeClick(LIKE_POINT.LIKE)} />
+      <Button className={`dislike${dislikeBtn ? " active" : ""}`} icon={"dislike"} onClick={() => likeClick(LIKE_POINT.DISLIKE)} />
     </div>
   )
 }

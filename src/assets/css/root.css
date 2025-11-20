@@ -1,0 +1,41 @@
+:root{
+    --scroll-thumb:#444;
+    --scroll-background:#ddd;
+
+    --white:#fff;
+    --red:#ff453a;
+    --blue:#0189ff;
+    --blue-active:#0278dd;
+    --border-color:#efefef;
+    --outline-border-color:#d3d3d3;
+    --menu-bg:#fafafa;
+    --hover-bg:#f0f0f0;
+    --active-bg:#e8e8e8;
+    --send-bg:#f0f0f0;
+    --send-active-bg:#1e1e1e;
+    --disabled:#f2f2f2;
+
+    --text-color14:#141414;
+    --text-color45:#454545;
+    --text-color72:#727272;
+    --text-color97:#979797;
+    --text-colora8:#a8a8a8;
+    --text-color1e:#1e1e1e;
+    --fs32:32px;
+    --fs28:28px;
+    --fs24:24px;
+    --fs20:20px;
+    --fs16:16px;
+    --fs14:14px;
+    --fs12:12px;
+
+    --header-height:60px;
+    --sidebar-width:280px;
+    --sidebar-closed-width:60px;
+    --sidebar-top-height:90px;
+    --chat-input-box-height:56px;
+    --icon-size:20px;
+
+    --chat-balloon-bg:#e8e8e8;
+    --accordion-bg:#fafafa;
+}

@@ -1,17 +1,22 @@
 import axios from "axios";
 
-export const http = axios.create(
-  {
-    baseURL: "http://localhost:8080/",
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json",
-      // "Access-Control-Allow-Origin": "*",
-      // "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-      // "Access-Control-Allow-Headers": "Content-Type, Authorization"
-    }
+export const http = axios.create({
+  baseURL: "http://localhost:8080/",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
   }
-);
+});
+
+export const getUserNameFromLocalStorage = () => {
+    const token = localStorage.getItem('userName');
+    return token || null;
+}
+
+export const getUserIdFromLocalStorage = () => {
+    const token = localStorage.getItem('userId');
+    return token || null;
+}
 
 // 랜덤 문구 생성기
 export const generateRandomString = () => {
@@ -29,3 +34,12 @@ export const generateRandomString = () => {
   }
   return result;
 }
+
+export const API_ENDPOINT = {
+  CHAT_QUERY: "/chat/query",
+  LOGIN: "/admin/login",
+  LOGOUT: "/admin/logout",
+  VALIDATE_TOKEN: "/admin/validateToken",
+  LIKE: "/evaluation",
+  ALL_ROOM: "/room/all",
+};
