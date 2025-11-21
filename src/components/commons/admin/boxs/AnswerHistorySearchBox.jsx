@@ -42,7 +42,7 @@ const AnswerHistorySearchBox = ({ defaultSearch, onSearch }) => {
   const submit = (e) => {
     e?.preventDefault?.();
     onSearch?.({
-      page: 0,
+      page: 1,
       size: 10,
       evaluationType: (evaluationType?.value ?? '') || null,
       queryText: (keyword ?? '') || null,
@@ -57,7 +57,7 @@ const AnswerHistorySearchBox = ({ defaultSearch, onSearch }) => {
     setKeyword('');
     setStartDate(null);
     setEndDate(null);
-    onSearch?.({ page: 0, size: 10, evaluationType: null, queryText: null, startDate: null, endDate: null });
+    onSearch?.({ page: 1, size: 10, evaluationType: null, queryText: null, startDate: null, endDate: null });
   };
 
   return (

@@ -177,7 +177,7 @@ const ChatbotUsageStatusManagement = () => {
       setGridData(mapped);
       setPageData({
         totalElements: body.totalElements || 0,
-        currentPage: (body.page || 0),
+        currentPage: (body.page || 1),
         pageSize: body.size || 10,
       });
     } catch (e) {

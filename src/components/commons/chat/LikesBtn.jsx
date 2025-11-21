@@ -21,7 +21,7 @@ const LikesBtn = ({ http, historySeq }) => {
 
   const LIKE_POINT = {
     LIKE: 5,
-    DISLIKE: 0
+    DISLIKE: 1
   }
 
   const likeClick = async (point) => {

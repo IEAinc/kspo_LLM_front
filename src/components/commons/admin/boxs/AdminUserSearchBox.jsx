@@ -28,11 +28,10 @@ const AdminUserSearchBox = ({ defaultSearch, onSearch }) => {
     e?.preventDefault?.();
     const nameOrId = (keyword ?? '').trim() || null;
     onSearch?.({
-      page: 0,
+      page: 1,
       size: 10,
       // 서버에서 name/id 둘 중 하나라도 매칭되도록 같은 키워드 전송
       name: nameOrId,
-      id: nameOrId,
       startDate: formatYmd(startDate),
       endDate: formatYmd(endDate),
     });
@@ -42,7 +41,7 @@ const AdminUserSearchBox = ({ defaultSearch, onSearch }) => {
     setKeyword('');
     setStartDate(null);
     setEndDate(null);
-    onSearch?.({ page: 0, size: 10, name: null, id: null, startDate: null, endDate: null });
+    onSearch?.({ page: 1, size: 10, name: null, id: null, startDate: null, endDate: null });
   };
 
   return (

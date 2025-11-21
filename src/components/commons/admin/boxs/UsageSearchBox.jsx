@@ -25,7 +25,7 @@ const UsageSearchBox = ({ defaultSearch, onSearch }) => {
   const submit = (e) => {
     e?.preventDefault?.();
     onSearch?.({
-      page: 0,
+      page: 1,
       size: 10,
       startDate: formatYmd(startDate),
       endDate: formatYmd(endDate),
@@ -35,7 +35,7 @@ const UsageSearchBox = ({ defaultSearch, onSearch }) => {
   const reset = () => {
     setStartDate(null);
     setEndDate(null);
-    onSearch?.({ page: 0, size: 10, startDate: null, endDate: null });
+    onSearch?.({ page: 1, size: 10, startDate: null, endDate: null });
   };
 
   return (

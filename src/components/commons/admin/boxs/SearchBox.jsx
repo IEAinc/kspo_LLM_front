@@ -45,7 +45,7 @@ const AdminSearchBox = ({ defaultSearch, onSearch }) => {
   const submit = (e) => {
     e?.preventDefault?.();
     onSearch?.({
-      page: 0,
+      page: 1,
       size: 10,
       docType: (docType?.value ?? '') || null,
       fileName: (fileName ?? '') || null,
@@ -60,7 +60,7 @@ const AdminSearchBox = ({ defaultSearch, onSearch }) => {
     setFileName('');
     setStartDate(null);
     setEndDate(null);
-    onSearch?.({ page: 0, size: 10, docType: null, fileName: null, startDate: null, endDate: null });
+    onSearch?.({ page: 1, size: 10, docType: null, fileName: null, startDate: null, endDate: null });
   };
 
   return (
