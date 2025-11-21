@@ -266,36 +266,36 @@ const ChatbotUsageStatusManagement = () => {
           {/* 금일 이용자 수 */}
           <div className="flex justify-between flex-col w-[25%] py-[20px] px-[20px] rounded-[20px] bg-white br-[#EEF4FF] border-2 relative overflow-hidden">
             <div className="flex justify-between items-start gap-2 mb-[8px] ">
-              <p className="text-[24px] font-bold text-black ]">금일 이용자 수</p>
-              <p className="text-[24px] font-medium text-gray-500">{countAll[0]} 명</p>
+              <p className="text-[18px] font-bold text-black">금일 이용자 수</p>
+              <p className="text-[18px] font-medium text-gray-500">{countAll[0]} 명</p>
             </div>
           </div>
           {/* 금일 질문 횟수 */}
           <div className="flex justify-between flex-col w-[25%] py-[20px] px-[20px] rounded-[20px] bg-white br-[#EEF4FF] border-2 relative overflow-hidden">
             <div className="flex justify-between items-start gap-2 mb-[8px] ">
-              <p className="text-[24px] font-bold text-black ]">금일 질문 횟수</p>
-              <p className="text-[24px] font-medium text-gray-500">{countAll[1]} 명</p>
+              <p className="text-[18px] font-bold text-black">금일 질문 횟수</p>
+              <p className="text-[18px] font-medium text-gray-500">{countAll[1]} 명</p>
             </div>
           </div>
           {/* 총 이용자 수 */}
           <div className="flex justify-between flex-col w-[25%] py-[20px] px-[20px] rounded-[20px] bg-white br-[#EEF4FF] border-2 relative overflow-hidden">
             <div className="flex justify-between items-start gap-2 mb-[8px] ">
-              <p className="text-[24px] font-bold text-black ]">총 이용자 수 </p>
-              <p className="text-[24px] font-medium text-gray-500">{countAll[2]} 명</p>
+              <p className="text-[18px] font-bold text-black">총 이용자 수 </p>
+              <p className="text-[18px] font-medium text-gray-500">{countAll[2]} 명</p>
             </div>
           </div>
           {/* 총 질문 횟수 */}
           <div className="flex justify-between flex-col w-[25%] py-[20px] px-[20px] rounded-[20px] bg-white br-[#EEF4FF] border-2 relative overflow-hidden">
             <div className="flex justify-between items-center gap-2 mb-[8px] ">
-              <p className="text-[24px] font-bold text-black ]">총 질문 횟수</p>
-              <p className="text-[24px] font-medium text-gray-500">{countAll[3]} 명</p>
+              <p className="text-[18px] font-bold text-black">총 질문 횟수</p>
+              <p className="text-[18px] font-medium text-gray-500">{countAll[3]} 명</p>
             </div>
           </div>
         </div>
         {/* 차트 */}
         <div className="w-[100%] py-[20px] px-[20px] rounded-[20px] bg-white br-[#EEF4FF] border-2">
           <div className="flex items-center justify-between mb-[8px]">
-            <div className="font-bold text-[24px]">
+            <div className="font-bold text-[18px]">
               {chartType === 'usage' ? '이용자 추이' : chartType === 'question' ? '질문횟수 추이' : '만족도 추이'}
             </div>
             <div className="flex gap-2">

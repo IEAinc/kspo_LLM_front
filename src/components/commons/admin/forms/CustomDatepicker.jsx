@@ -152,7 +152,7 @@ const CustomDatePicker = ({
             >
                 기간
             </label>
-            <div className="flex gap-[12px] sm:flex-wrap md:flex-nowrap lg:flex-nowrap w-[calc(100%-50px)]">
+            <div className="flex gap-[12px] sm:flex-wrap md:flex-nowrap lg:flex-nowrap w-[calc(100%-50px)] items-center">
                 {/* 시작 날짜 선택 */}
                 <div className={`${widthClass} relative  md:w-[calc(50%-18px)] sm:w-[calc(50%-18px)] w-full`}>
                     <DatePicker
