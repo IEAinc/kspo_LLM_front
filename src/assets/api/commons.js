@@ -51,6 +51,7 @@ export const API_ENDPOINT = {
   ADMIN_ID_CHECK: "/admin/user/idCheck",
   ANSWER_HISTORY: "/admin/history",
   HISTORY_USAGE: "/admin/history/usage",
+  HISTORY_TOTAL_USAGE: "/admin/history/total/usage",
   VALIDATE_TOKEN: "/admin/validateToken",
   LIKE: "/evaluation",
   ALL_ROOM: "/room/all",
