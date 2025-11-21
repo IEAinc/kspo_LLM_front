@@ -130,15 +130,73 @@ const AdminManagement = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname]);
 
-    const handleDataUpdate = () => {
+    const handleDataUpdate = (updatedData, gridApi) => {
+        const selected = gridApi?.getSelectedRows?.() || [];
+        if (!selected.length) {
+            setAlertState({
+                isOpen: true,
+                title: '안내',
+                message: '삭제할 항목을 선택하세요.',
+                iconMode: 'warn',
+                confirmButton: { text: '확인', colorMode: true },
+                cancelButton: false,
+                onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+            });
+            return;
+        }
+        const adminSeqList = selected
+            .map((r) => r.adminSeq ?? r.rowKey ?? null)
+            .filter((v) => v !== null && v !== undefined);
+        if (!adminSeqList.length) {
+            setAlertState({
+                isOpen: true,
+                title: '오류',
+                message: '선택한 항목에 유효한 식별자(adminSeq)가 없습니다.',
+                iconMode: 'warn',
+                confirmButton: { text: '확인', colorMode: true },
+                cancelButton: false,
+                onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+            });
+            return;
+        }
+
         setAlertState({
             isOpen: true,
-            title: '안내',
-            message: '삭제 기능은 추후 제공 예정입니다.',
+            title: '삭제 확인',
+            message: `선택한 ${adminSeqList.length}건을 삭제하시겠습니까?`,
             iconMode: 'warn',
-            confirmButton: {text: '확인', colorMode: true},
-            cancelButton: false,
-            onConfirm: () => setAlertState((p) => ({...p, isOpen: false})),
+            confirmButton: { text: '삭제', colorMode: true },
+            cancelButton: { text: '취소' },
+            onConfirm: async () => {
+                try {
+                    // axios delete with payload in config.data
+                    await http.delete(API_ENDPOINT.ADMIN_USER_DELETE, {
+                        data: { adminSeqList },
+                    });
+                    setAlertState({
+                        isOpen: true,
+                        title: '완료',
+                        message: '삭제가 완료되었습니다.',
+                        iconMode: 'warn',
+                        confirmButton: { text: '확인', colorMode: true },
+                        cancelButton: false,
+                        onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+                    });
+                    // 재조회
+                    fetchAdmins(searchParams);
+                } catch (e) {
+                    setAlertState({
+                        isOpen: true,
+                        title: '오류',
+                        message: '삭제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+                        iconMode: 'warn',
+                        confirmButton: { text: '확인', colorMode: true },
+                        cancelButton: false,
+                        onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+                    });
+                }
+            },
+            onCancel: () => setAlertState((p) => ({ ...p, isOpen: false })),
         });
     };
 

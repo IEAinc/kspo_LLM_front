@@ -350,11 +350,11 @@ const AdminRegisterManagement = () => {
                 />
               </div>
               <span className="inline-block">@</span>
-              { form.emailDomain.value === '' ?
+              { form.emailDomain.label === '직접 입력' ?
                   <div className="w-[calc(50%-5px)]">
                       <Input
                           value={form.emailDomain.value}
-                          onInput={(e) => setForm((f) => ({ ...f, emailDomain: { value: e.target.value, label: e.target.value } }))}
+                          onInput={(e) => setForm((f) => ({ ...f, emailDomain: { value: e.target.value, label: '직접 입력' } }))}
                           options={{ isNormal: true, widthSize: 'full', noTransformed: true }}
                       />
                   </div>
