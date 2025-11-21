@@ -15,18 +15,17 @@ const Login = () => {
         if (id !== "" && pw !== "") {
             userApi.login({id: id, password: pw})
                 .then((response) => {
-                    if (response.status === 200) {
-                        window.location.href = "/ksponcoadministrator/document";
-                    } else {
-                        setAlert(true);
-                    }
+                    if (response.status === 200) window.location.href = "/ksponcoadministrator/document";
+                    else setAlert(true);
                 })
-                .catch(() => {
-                    setAlert(true);
-                });
+                .catch(() => { setAlert(true); });
         } else {
             setAlert(true);
         }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') handleLogin();
     }
 
     return (
@@ -38,8 +37,8 @@ const Login = () => {
                         <h2>통합 관리자 로그인</h2>
                     </div>
                     <div className="form">
-                        <InputBox name={"id"} validation={"아이디를 다시 확인해주세요."} onInput={(e) => setId(e.target.value)}/>
-                        <InputBox name={"pw"} validation={"비밀번호를 다시 확인해주세요."} onInput={(e) => setPw(e.target.value)}
+                        <InputBox name={"id"} validation={"아이디를 다시 확인해주세요."} onInput={(e) => setId(e.target.value)} />
+                        <InputBox name={"pw"} validation={"비밀번호를 다시 확인해주세요."} onInput={(e) => setPw(e.target.value)} onKeyDown={handleKeyDown}
                                   password/>
                         <CheckBox name={"id_save"} text={"아이디 저장하기"}/>
                         <Button className={"primary large"} text={"로그인"} contained onClick={handleLogin}/>

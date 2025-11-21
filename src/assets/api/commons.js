@@ -41,6 +41,7 @@ export const API_ENDPOINT = {
   LOGOUT: "/admin/logout",
   DOCS_PAGE: "/admin/docs",
   DOCS_CREATE: "/admin/docs/regulation-docs",
+  DOCS_DELETE: "/admin/docs/delete",
   DOCS_DETAIL: "/admin/docs", // usage: `${DOCS_DETAIL}/${regulationDocsSeq}`
   ADMIN_USER_PAGE: "/admin/user",
   ADMIN_USER_INSERT: "/admin/user/insert",

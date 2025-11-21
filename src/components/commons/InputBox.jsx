@@ -13,6 +13,7 @@ const InputBox = (props) => {
           disabled={props.disabled}
           placeholder={props.placeholder}
           onInput={props.onInput}
+          onKeyDown={props.onKeyDown}
         />
       </label>
       <span className="error">{props.validation}</span>

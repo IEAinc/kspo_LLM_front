@@ -62,7 +62,7 @@ const DocumentManagement = () => {
         },
       },
       { headerName: '문서유형', field: 'docTypeName', flex: 1, cellClass: 'text-center', width: 90},
-      { headerName: '파일명', field: 'fileName', flex: 1, cellClass: 'text-center'},
+      { headerName: '파일명', field: 'fileName', flex: 1, cellClass: 'text-left'},
       {
         headerName: '사용 여부', field: 'useYn', flex: 1, cellClass: 'text-center', width: 90,
         valueFormatter: (p) => (p.value === 'Y' ? '사용' : '미사용')
