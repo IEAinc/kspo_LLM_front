@@ -52,6 +52,7 @@ export const API_ENDPOINT = {
   ANSWER_HISTORY: "/admin/history",
   HISTORY_USAGE: "/admin/history/usage",
   HISTORY_TOTAL_USAGE: "/admin/history/total/usage",
+  HISTORY_TOTAL_USAGE_CHART: "/admin/history/total/usage/chart",
   VALIDATE_TOKEN: "/admin/validateToken",
   LIKE: "/evaluation",
   ALL_ROOM: "/room/all",

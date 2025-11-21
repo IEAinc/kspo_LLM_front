@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { API_ENDPOINT, http } from '../../../../assets/api/commons.js';
 import CustomAlert from '../../../commons/admin/CustomAlert.jsx';
@@ -28,25 +28,63 @@ const ChatbotUsageStatusManagement = () => {
 
   // 상단 요약 및 차트 상태
   const [countAll, setCountAll] = useState([0, 0, 0, 0]); // [todayUsage, todayQuestion, totalUsage, totalQuestion]
-  const [chartData, setChartData] = useState([
-    { date: "6/20", userCount: 120 },
-    { date: "6/21", userCount: 180 },
-    { date: "6/22", userCount: 90 },
-    { date: "6/23", userCount: 210 },
-    { date: "6/24", userCount: 160 },
-    { date: "6/25", userCount: 240 },
-    { date: "6/26", userCount: 190 },
-  ]);
-  const chartSeries = [
-    {
-      type: "line",
-      xKey: "date",
-      yKey: "userCount",
-      yName: "사용자수",
-      stroke: "#4D7CFE",
-      marker: { enabled: true, fill: "#4D7CFE" },
-    },
-  ];
+  // 차트 상태 및 타입
+  const [chartType, setChartType] = useState('usage'); // 'usage' | 'question' | 'satisfaction'
+  const [chartData, setChartData] = useState([]);
+
+  const chartSeries = useMemo(() => {
+    if (chartType === 'usage') {
+      return [
+        {
+          type: 'line',
+          xKey: 'date',
+          yKey: 'usageCount',
+          yName: '이용자 수',
+          stroke: '#4D7CFE',
+          marker: { enabled: true, fill: '#4D7CFE' },
+        },
+      ];
+    }
+    if (chartType === 'question') {
+      return [
+        {
+          type: 'line',
+          xKey: 'date',
+          yKey: 'questionCount',
+          yName: '질문 횟수',
+          stroke: '#2ECC71',
+          marker: { enabled: true, fill: '#2ECC71' },
+        },
+      ];
+    }
+    // satisfaction: 3 lines
+    return [
+      {
+        type: 'line',
+        xKey: 'date',
+        yKey: 'thumbsUpCount',
+        yName: '좋아요',
+        stroke: '#6A0DAD', // purple
+        marker: { enabled: true, fill: '#6A0DAD' },
+      },
+      {
+        type: 'line',
+        xKey: 'date',
+        yKey: 'thumbsDownCount',
+        yName: '싫어요',
+        stroke: '#FF3B30', // red
+        marker: { enabled: true, fill: '#FF3B30' },
+      },
+      {
+        type: 'line',
+        xKey: 'date',
+        yKey: 'noResponseCount',
+        yName: '무응답',
+        stroke: '#000000', // black
+        marker: { enabled: true, fill: '#000000' },
+      },
+    ];
+  }, [chartType]);
 
   // 총계/오늘 통계는 페이지 최초 로드 시 1회만 조회
   const loadTotalUsage = async () => {
@@ -109,7 +147,7 @@ const ChatbotUsageStatusManagement = () => {
     ]);
   }, []);
 
-  // 데이터 조회
+  // 데이터 조회 (그리드)
   const fetchUsage = async (criteria) => {
     const params = { ...(criteria || searchParams) };
     setSearchParams(params);
@@ -155,16 +193,71 @@ const ChatbotUsageStatusManagement = () => {
     }
   };
 
+  // 날짜 포맷: LocalDateTime -> MM/DD
+  const toMmDd = (value) => {
+    if (!value) return '';
+    try {
+      // handle 'YYYY-MM-DDTHH:mm:ss' or Date-like
+      const s = typeof value === 'string' ? value : String(value);
+      const [datePart] = s.split('T');
+      const d = new Date(s.includes('T') ? s : datePart);
+      if (!isNaN(d.getTime())) {
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${m}/${day}`;
+      }
+      // fallback by splitting yyyy-mm-dd
+      const bits = (datePart || s).split('-');
+      if (bits.length >= 3) return `${bits[1]}/${bits[2].slice(0, 2)}`;
+      return s;
+    } catch {
+      return '';
+    }
+  };
+
+  // 차트 데이터 조회 (검색 시 호출)
+  const loadChart = async (criteria) => {
+    const params = { ...(criteria || {}) };
+    try {
+      const res = await http.get(API_ENDPOINT.HISTORY_TOTAL_USAGE_CHART, {
+        params: {
+          startDate: params.startDate || undefined,
+          endDate: params.endDate || undefined,
+        },
+      });
+      const list = Array.isArray(res?.data?.response) ? res.data.response : (Array.isArray(res?.data) ? res.data : []);
+      const mapped = list.map((row) => ({
+        date: toMmDd(row.date),
+        usageCount: Number(row.usageCount ?? 0),
+        questionCount: Number(row.questionCount ?? 0),
+        thumbsUpCount: Number(row.thumbsUpCount ?? 0),
+        thumbsDownCount: Number(row.thumbsDownCount ?? 0),
+        noResponseCount: Number(row.noResponseCount ?? 0),
+      }));
+      setChartData(mapped);
+    } catch (e) {
+      // 차트 오류는 치명적이지 않으므로 무시
+      setChartData([]);
+    }
+  };
+
+  // 검색 버튼 핸들러: 그리드 + 차트 동시 조회
+  const handleSearch = async (criteria) => {
+    await fetchUsage(criteria);
+    await loadChart(criteria);
+  };
+
   // 최초 로드 시 목록 조회
   useEffect(() => {
     fetchUsage(searchParams);
+    loadChart(searchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   return (
     <div>
       <div className="w-full mb-[16px]">
-        <UsageSearchBox defaultSearch={searchParams} onSearch={fetchUsage} />
+        <UsageSearchBox defaultSearch={searchParams} onSearch={handleSearch} />
       </div>
 
 
@@ -201,7 +294,22 @@ const ChatbotUsageStatusManagement = () => {
         </div>
         {/* 차트 */}
         <div className="w-[100%] py-[20px] px-[20px] rounded-[20px] bg-white br-[#EEF4FF] border-2">
-          <div className="flex font-bold text-[24px] mb-[4px]">이용자 추이</div>
+          <div className="flex items-center justify-between mb-[8px]">
+            <div className="font-bold text-[24px]">
+              {chartType === 'usage' ? '이용자 추이' : chartType === 'question' ? '질문횟수 추이' : '만족도 추이'}
+            </div>
+            <div className="flex gap-2">
+              <Btn size="xs" onClick={() => setChartType('usage')} colorMode={chartType==='usage'}>
+                이용자 추이
+              </Btn>
+              <Btn size="xs" onClick={() => setChartType('question')} colorMode={chartType==='question'}>
+                질문횟수 추이
+              </Btn>
+              <Btn size="xs" onClick={() => setChartType('satisfaction')} colorMode={chartType==='satisfaction'}>
+                만족도 추이
+              </Btn>
+            </div>
+          </div>
           {/* 차트 컴포넌트 */}
           <AgChart
               data={chartData}
