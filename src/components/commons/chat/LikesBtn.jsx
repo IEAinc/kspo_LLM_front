@@ -7,7 +7,6 @@ const LikesBtn = ({ http, historySeq }) => {
   const [dislikeBtn, setDislikeBtn] = useState(false);
 
   const handleResponse = (resData) => {
-    console.log(resData);
     if(resData === "THUMBS_UP"){
       setLikeBtn(true);
       setDislikeBtn(false);

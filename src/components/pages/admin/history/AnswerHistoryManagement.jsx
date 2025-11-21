@@ -97,7 +97,7 @@ const AnswerHistoryManagement = () => {
       setGridData(mapped);
       setPageData({
         totalElements: body.totalElements || 0,
-        currentPage: (body.page || 0) + 1,
+        currentPage: (body.page || 0),
         pageSize: body.size || 10,
       });
     } catch (e) {
@@ -134,6 +134,8 @@ const AnswerHistoryManagement = () => {
           indicator={{ excel: true }}
           isCheckboxMode={false}
           sortable={true}
+          onPageChange={(page) => fetchHistories({ ...searchParams, page })}
+          onPageSizeChange={(size) => fetchHistories({ ...searchParams, page: 1, size })}
         />
       </Box>
       <CustomAlert

@@ -80,7 +80,7 @@ const HistoryItems = (props) => {
         .then(() => {
         })
       }catch(e){
-        console.log(e)
+        console.error(e)
       }
 
       setTitleChange(false);
@@ -97,7 +97,7 @@ const HistoryItems = (props) => {
         props.setActiveIndex(null);
       })
     }catch(e){
-      console.log(e)
+      console.error(e)
     }
 
     setMoreOpen(false);

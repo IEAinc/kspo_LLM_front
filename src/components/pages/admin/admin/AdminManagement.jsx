@@ -95,7 +95,7 @@ const AdminManagement = () => {
             setGridData(mapped);
             setPageData({
                 totalElements: body.totalElements || 0,
-                currentPage: (body.page || 0) + 1,
+                currentPage: (body.page || 0),
                 pageSize: body.size || 10,
             });
         } catch (e) {
@@ -170,6 +170,8 @@ const AdminManagement = () => {
                     onRegisterClick={handleRegisterClick}
                     onEditClick={onEditClick}
                     sortable={true}
+                    onPageChange={(page) => fetchAdmins({ ...searchParams, page })}
+                    onPageSizeChange={(size) => fetchAdmins({ ...searchParams, page: 1, size })}
                 />
             </Box>
             <CustomAlert

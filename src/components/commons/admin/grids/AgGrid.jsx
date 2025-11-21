@@ -23,39 +23,54 @@ const AgGrid = (props) => {
     resizable: !!props.resizable,
   };
 
-  /* pagination 관련 설정 */
-  const [pageSize, setPageSize] = useState(10); // 페이지당 데이터 수
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 (index 1 기반)
-  const [displayData, setDisplayData] = useState([]); // 현재 페이지에 표시할 데이터
+  // 서버/클라이언트 페이징 모드 판별
+  const isServerMode = !!props.onPageChange || !!props.serverPagination;
 
-  // 상위 데이터의 총 개수
-  const totalItems = props.pageData.totalElements;
-  const totalPages = Math.ceil(totalItems / pageSize);
+  /* pagination 관련 설정 (클라이언트 모드에서만 내부 상태 사용) */
+  const [clientPageSize, setClientPageSize] = useState(10); // 페이지당 데이터 수
+  const [clientCurrentPage, setClientCurrentPage] = useState(1); // 현재 페이지 (index 1 기반)
+  const [displayData, setDisplayData] = useState([]); // 현재 페이지에 표시할 데이터 (클라이언트 모드)
 
-  // 데이터를 슬라이싱하고 페이지 상태 조정
+  // 페이지 값 소스 결정
+  const currentPage = isServerMode ? (props.pageData?.currentPage || 1) : clientCurrentPage;
+  const pageSize = isServerMode ? (props.pageData?.pageSize || 10) : clientPageSize;
+  const totalItems = props.pageData?.totalElements || 0;
+  const totalPages = Math.ceil((totalItems || 0) / (pageSize || 10)) || 1;
+
+  // 클라이언트 모드에서만 데이터를 슬라이싱
   useEffect(() => {
-    const calculatedTotalPages = Math.ceil(totalItems / pageSize);
+    if (isServerMode) return; // 서버 모드에서는 상위에서 전달된 데이터 그대로 사용
 
-    if (currentPage > calculatedTotalPages && totalItems > 0) {
-      if (currentPage !== calculatedTotalPages) {
-        setCurrentPage(calculatedTotalPages);
+    const calculatedTotalPages = Math.ceil((totalItems || (props.rowData?.length || 0)) / pageSize) || 1;
+
+    if (clientCurrentPage > calculatedTotalPages && (totalItems > 0 || props.rowData?.length > 0)) {
+      if (clientCurrentPage !== calculatedTotalPages) {
+        setClientCurrentPage(calculatedTotalPages);
       }
     } else {
-      const startIndex = (currentPage - 1) * pageSize;
+      const startIndex = (clientCurrentPage - 1) * pageSize;
       const endIndex = startIndex + pageSize;
-      setDisplayData(props.rowData.slice(startIndex, endIndex));
+      setDisplayData((props.rowData || []).slice(startIndex, endIndex));
     }
-  }, [props.rowData, pageSize, currentPage, totalItems]);
+  }, [props.rowData, pageSize, clientCurrentPage, totalItems, isServerMode]);
 
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+    if (!(page >= 1 && page <= totalPages)) return;
+    if (isServerMode) {
+      props.onPageChange && props.onPageChange(page);
+    } else {
+      setClientCurrentPage(page);
     }
   };
 
   const handlePageSizeChange = (newSize) => {
-    setPageSize(newSize);
-    setCurrentPage(1);
+    if (isServerMode) {
+      // 서버 모드에서는 상위에서 재조회 수행, 보통 페이지 1로
+      props.onPageSizeChange && props.onPageSizeChange(newSize);
+    } else {
+      setClientPageSize(newSize);
+      setClientCurrentPage(1);
+    }
   };
 
   // 선택된 row 수정하기
@@ -73,7 +88,7 @@ const AgGrid = (props) => {
     const selectedRows = gridApi.getSelectedRows();
 
     // 고유 ID를 기준으로 데이터 필터링
-    const updatedData = props.rowData.filter((row) => !selectedRows.some((selected) => selected.id === row.id));
+    const updatedData = (props.rowData || []).filter((row) => !selectedRows.some((selected) => selected.id === row.id));
 
     if (props.onDataUpdate) {
       props.onDataUpdate(updatedData, gridApi);
@@ -133,6 +148,9 @@ const AgGrid = (props) => {
     saveAs(blob, 'export.xlsx');
   };
 
+  // 서버 모드에서는 상위에서 전달된 데이터를 그대로 사용
+  const dataForGrid = isServerMode ? (props.rowData || []) : displayData;
+
   return (
     <div className="grid-box w-full">
       {props.indicator ? (
@@ -165,7 +183,7 @@ const AgGrid = (props) => {
       <div className="ag-theme-alpine w-full" style={{ height: props.height }}>
         <AgGridReact
           ref={gridRef}
-          rowData={displayData}
+          rowData={dataForGrid}
           columnDefs={props.columnDefs}
           headerHeight={40}
           defaultColDef={defaultColDef}
@@ -183,7 +201,6 @@ const AgGrid = (props) => {
           onGridReady={(params) => {
             gridRef.current = params.api;
             setGridApi(params.api);
-            console.log(params.api);
             const checkboxColumn = params.api.getAllGridColumns().find(col => col.getColDef().colId === "ag-Grid-SelectionColumn");
             if (checkboxColumn) {
               // 너비 50으로 고정
