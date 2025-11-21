@@ -164,15 +164,21 @@ const DocumentManagement = () => {
       });
       return;
     }
-    setAlertState({
-      isOpen: true,
-      title: '안내',
-      message: '수정 기능은 추후 제공 예정입니다.',
-      iconMode: 'warn',
-      confirmButton: { text: '확인', colorMode: true },
-      cancelButton: false,
-      onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
-    });
+    const row = selectedRows[0];
+    const id = row.regulationDocsSeq || row.id;
+    if (!id) {
+      setAlertState({
+        isOpen: true,
+        title: '오류',
+        message: '선택한 항목의 식별자를 찾을 수 없습니다.',
+        iconMode: 'warn',
+        confirmButton: { text: '확인', colorMode: true },
+        cancelButton: false,
+        onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
+      });
+      return;
+    }
+    navigate(`/ksponcoadministrator/document/update/${encodeURIComponent(String(id))}`);
   };
 
   return (

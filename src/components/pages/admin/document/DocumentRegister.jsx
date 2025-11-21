@@ -4,6 +4,7 @@ import Box from '../../../commons/admin/boxs/Box.jsx';
 import Select from '../../../commons/admin/forms/Select.jsx';
 import Input from '../../../commons/admin/forms/Input.jsx';
 import Btn from '../../../commons/admin/forms/Btn.jsx';
+import { API_ENDPOINT, http, getUserIdFromLocalStorage } from '../../../../assets/api/commons.js';
 
 const docTypeOptions = [
   { value: 'BASE', label: '기본규정' },
@@ -62,6 +63,37 @@ const DocumentRegister = () => {
   };
 
   const goList = () => navigate('/ksponcoadministrator/document');
+
+  const handleSubmit = async () => {
+    if (!file) {
+      alert('파일을 선택하세요.');
+      return;
+    }
+    if (!docName?.trim()) {
+      alert('문서명을 입력하세요.');
+      return;
+    }
+    try {
+      const adminId = getUserIdFromLocalStorage();
+      const req = {
+        adminSeq: null,
+        adminId: adminId || null,
+        docType: docType?.value,
+        title: docName,
+        useType: useYn?.value,
+        ip: null,
+      };
+      const formData = new FormData();
+      formData.append('request', new Blob([JSON.stringify(req)], { type: 'application/json' }));
+      formData.append('file', file);
+      await http.post(API_ENDPOINT.DOCS_CREATE, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      alert('등록이 완료되었습니다.');
+      goList();
+    } catch (e) {
+      console.error(e);
+      alert('등록 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div>
@@ -246,8 +278,9 @@ const DocumentRegister = () => {
           </div>
         </div>
 
-        {/* 우측 하단 버튼: 목록만 필수 요구였지만 등록도 배치(동작은 미구현) */}
+        {/* 우측 하단 버튼 */}
         <div className="mt-[16px] flex items-center justify-end gap-2">
+          <Btn size="sm" onClick={handleSubmit}>등록</Btn>
           <Btn size="sm" onClick={goList}>목록</Btn>
         </div>
       </Box>

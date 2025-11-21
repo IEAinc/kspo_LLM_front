@@ -10,6 +10,8 @@ import ChatbotUsageStatusManagement from "./components/pages/admin/history/Chatb
 import AdminRegisterManagement from "./components/pages/admin/admin/AdminRegisterManagement.jsx";
 import AdminDetail from "./components/pages/admin/admin/AdminDetail.jsx";
 import DocumentRegister from "./components/pages/admin/document/DocumentRegister.jsx";
+import DocumentDetail from "./components/pages/admin/document/DocumentDetail.jsx";
+import DocumentUpdate from "./components/pages/admin/document/DocumentUpdate.jsx";
 
 const App = () => {
 
@@ -30,6 +32,8 @@ const App = () => {
             {/* 문서 관리 */}
             <Route path="document" element={<DocumentManagement />} />
             <Route path="document/register" element={<DocumentRegister />} />
+            <Route path="document/detail/:id" element={<DocumentDetail />} />
+            <Route path="document/update/:id" element={<DocumentUpdate />} />
 
             {/* 관리자 관리 */}
             <Route path="adminManagement" element={<AdminManagement />} />
