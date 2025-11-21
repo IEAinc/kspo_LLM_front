@@ -8,11 +8,11 @@ import Select from '../../../commons/admin/forms/Select.jsx';
 import Input from '../../../commons/admin/forms/Input.jsx';
 
 const scIdOptions = [
-  { value: '06', label: '올림픽수영장 (06)' },
-  { value: '01', label: '올림픽공원스포츠센터 (01)' },
-  { value: '07', label: '올팍축구장 (07)' },
-  { value: '05', label: '일산올림픽스포츠센터 (05)' },
-  { value: '03', label: '분당올림픽스포츠센터 (03)' },
+  { value: '01', label: '올림픽공원스포츠센터' },
+  { value: '03', label: '분당올림픽스포츠센터' },
+  { value: '05', label: '일산올림픽스포츠센터' },
+  { value: '06', label: '올림픽수영장' },
+  { value: '07', label: '올팍축구장' },
 ];
 
 const emailDomainOptions = [
@@ -20,6 +20,7 @@ const emailDomainOptions = [
   { value: 'daum.net', label: 'daum.net' },
   { value: 'hanmail.net', label: 'hanmail.net' },
   { value: 'google.com', label: 'google.com' },
+  { value: '', label: '직접 입력' },
 ];
 
 const AdminRegisterManagement = () => {
@@ -48,7 +49,7 @@ const AdminRegisterManagement = () => {
     confirmPassword: '',
     name: '',
     scId: scIdOptions[0],
-    company: '',
+    company: scIdOptions[0].label,
     emailLocal: '',
     emailDomain: emailDomainOptions[0],
     tel1: '',
@@ -99,7 +100,7 @@ const AdminRegisterManagement = () => {
         confirmPassword: '',
         name: data.name || '',
         scId: scIdOptions.find(o => o.value === data.scId) || scIdOptions[0],
-        company: data.company || '',
+        company: scIdOptions.find(o => o.value === data.scId).label || scIdOptions[0].label,
         emailLocal: emailLocal,
         emailDomain: emailDomainOptions.find(o => o.value === emailDom) || emailDomainOptions[0],
         tel1: t1,
@@ -126,26 +127,26 @@ const AdminRegisterManagement = () => {
       setAlertState({ isOpen: true, title: '경고', message: '아이디를 입력하세요.', iconMode: 'warn', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
       return;
     }
-    try {
-      await http.get(`${API_ENDPOINT.ADMIN_USER_DETAIL}/${encodeURIComponent(user)}`);
-      // 존재 → 사용 불가
-      setAlertState({ isOpen: true, title: '경고', message: '이미 사용중인 아이디입니다.', iconMode: 'warn', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
-      setForm((f) => ({ ...f, chkId: false }));
-    } catch (e) {
-      if (e?.response?.status === 404) {
-        // 없음 → 사용 가능
-        setAlertState({ isOpen: true, title: '안내', message: '사용 가능한 아이디입니다.', iconMode: 'success', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
-        setForm((f) => ({ ...f, chkId: true }));
+      const res = await http.get(`${API_ENDPOINT.ADMIN_ID_CHECK}/${encodeURIComponent(user)}`);
+      if (res.status === 200) {
+        if (res?.data?.response) {
+          // 있음 → 사용 불가
+          setAlertState({ isOpen: true, title: '경고', message: '이미 사용중인 아이디입니다.', iconMode: 'warn', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
+          setForm((f) => ({ ...f, chkId: false }));
+        } else {
+          // 없음 → 사용 가능
+          setAlertState({ isOpen: true, title: '안내', message: '사용 가능한 아이디입니다.', iconMode: 'success', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
+          setForm((f) => ({ ...f, chkId: true }));
+        }
       } else {
         setAlertState({ isOpen: true, title: '오류', message: '아이디 확인 중 오류가 발생했습니다.', iconMode: 'warn', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
       }
-    }
   };
 
   const validateAndSubmit = async () => {
     // Required fields
     if (!form.scId?.value) {
-      setAlertState({ isOpen: true, title: '경고', message: '센터 SC_ID를 선택하세요.', iconMode: 'warn', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
+      setAlertState({ isOpen: true, title: '경고', message: '센터를 선택하세요.', iconMode: 'warn', confirmButton: { text: '확인', colorMode: true }, cancelButton: false, onConfirm: hideAlert });
       return;
     }
     if (!form.name?.trim()) {
@@ -250,7 +251,7 @@ const AdminRegisterManagement = () => {
         {/* 센터 SC_ID */}
         <div className="w-full flex">
           <div className="min-w-[120px] flex items-center justify-center text-[14px] font-bold text-gray1 bg-tb-bg-color border-r border-b border-tb-br-color">
-            센터 SC_ID<span className="text-point-color">*</span>
+            센터<span className="text-point-color">*</span>
           </div>
           <div className="w-full px-[8px] py-[6px] border-b border-tb-br-color">
             <div className="w-full lg:max-w-[321px] md:max-w-[321px]">
@@ -259,22 +260,6 @@ const AdminRegisterManagement = () => {
                 options={scIdOptions}
                 onChange={(opt) => setForm((f) => ({ ...f, scId: opt }))}
                 uiOptions={{ widthSize: 'full', noTransformed: true }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 회사 */}
-        <div className="w-full flex">
-          <div className="min-w-[120px] flex items-center justify-center text-[14px] font-bold text-gray1 bg-tb-bg-color border-r border-b border-tb-br-color">
-            회사
-          </div>
-          <div className="w-full px-[8px] py-[6px] border-b border-tb-br-color">
-            <div className="w-full lg:max-w-[321px] md:max-w-[321px]">
-              <Input
-                value={form.company}
-                onInput={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
-                options={{ isNormal: true, noTransformed: true }}
               />
             </div>
           </div>
@@ -365,12 +350,22 @@ const AdminRegisterManagement = () => {
                 />
               </div>
               <span className="inline-block">@</span>
+              { form.emailDomain.value === '' ?
+                  <div className="w-[calc(50%-5px)]">
+                      <Input
+                          value={form.emailDomain.value}
+                          onInput={(e) => setForm((f) => ({ ...f, emailDomain: { value: e.target.value, label: e.target.value } }))}
+                          options={{ isNormal: true, widthSize: 'full', noTransformed: true }}
+                      />
+                  </div>
+                    : null
+              }
               <div className="w-[calc(50%-5px)]">
                 <Select
-                  value={form.emailDomain}
-                  options={emailDomainOptions}
-                  onChange={(opt) => setForm((f) => ({ ...f, emailDomain: opt }))}
-                  uiOptions={{ widthSize: 'full', noTransformed: true }}
+                    value={form.emailDomain}
+                    options={emailDomainOptions}
+                    onChange={(opt) => setForm((f) => ({ ...f, emailDomain: opt }))}
+                    uiOptions={{ widthSize: 'full', noTransformed: true }}
                 />
               </div>
             </div>

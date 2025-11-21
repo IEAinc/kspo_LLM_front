@@ -200,6 +200,7 @@ const DocumentManagement = () => {
           onDataUpdate={handleDataUpdate}
           onRegisterClick={handleRegisterClick}
           onEditClick={onEditClick}
+          resizable={true}
           sortable={true}
         />
       </Box>

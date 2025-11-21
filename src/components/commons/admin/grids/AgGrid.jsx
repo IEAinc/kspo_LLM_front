@@ -195,14 +195,14 @@ const AgGrid = (props) => {
             params.api.autoSizeColumns(autoSizeColumnIds);
           }}
           onFirstDataRendered={(params) => {
-            const allColumns = params.api.getAllGridColumns();
-            const autoSizeColumnIds = allColumns.filter((col) => col.getColDef().colId !== "ag-Grid-SelectionColumn").map((col) => col.getId());
-            params.api.autoSizeColumns(autoSizeColumnIds);
+            // const allColumns = params.api.getAllGridColumns();
+            // const autoSizeColumnIds = allColumns.filter((col) => col.getColDef().colId !== "ag-Grid-SelectionColumn").map((col) => col.getId());
+            // params.api.autoSizeColumns(autoSizeColumnIds);
           }}
           onGridSizeChanged={(params) => {
-            setTimeout(function () {
-              params.api.sizeColumnsToFit();
-            }, 0);
+            // setTimeout(function () {
+            //   params.api.sizeColumnsToFit();
+            // }, 0);
           }}
         />
       </div>
