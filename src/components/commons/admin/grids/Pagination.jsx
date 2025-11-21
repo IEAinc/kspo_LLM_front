@@ -8,7 +8,7 @@ const Pagination = ({ currentPage, totalItems, pageSize, onPageChange }) => {
   };
 
   const getPageNumbers = () => {
-    const maxVisiblePages = 7;
+    const maxVisiblePages = 5;
     const pages = [];
 
     if (totalPages <= maxVisiblePages) {

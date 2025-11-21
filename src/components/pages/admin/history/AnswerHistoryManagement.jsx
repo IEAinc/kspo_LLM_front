@@ -27,8 +27,9 @@ const AnswerHistoryManagement = () => {
 
   // Grid 상태
   const [gridData, setGridData] = useState([]);
+  const [pageData, setPageData] = useState({});
   const [gridColumns, setGridColumns] = useState([]);
-  const [searchParams, setSearchParams] = useState({ page: 0, size: 10, evaluationType: null, queryText: null, startDate: null, endDate: null });
+  const [searchParams, setSearchParams] = useState({ page: 1, size: 10, evaluationType: null, queryText: null, startDate: null, endDate: null });
 
   const dateFormatter = (params) => {
     if (!params.value) return '';
@@ -76,7 +77,7 @@ const AnswerHistoryManagement = () => {
     try {
       const res = await http.get(API_ENDPOINT.ANSWER_HISTORY, {
         params: {
-          page: params.page ?? 0,
+          page: params.page ?? 1,
           size: params.size ?? 10,
           evaluationType: params.evaluationType || undefined,
           queryText: params.queryText || undefined,
@@ -94,6 +95,11 @@ const AnswerHistoryManagement = () => {
         evaluation: it.evaluation === '미응답' ? '미응답' : it.evaluation,
       }));
       setGridData(mapped);
+      setPageData({
+        totalElements: body.totalElements || 0,
+        currentPage: (body.page || 0) + 1,
+        pageSize: body.size || 10,
+      });
     } catch (e) {
       setAlertState({
         isOpen: true,
@@ -122,6 +128,7 @@ const AnswerHistoryManagement = () => {
         <AgGrid
           rowDeselection={true}
           rowData={gridData}
+          pageData={pageData}
           columnDefs={gridColumns}
           height={463}
           indicator={{ excel: true }}

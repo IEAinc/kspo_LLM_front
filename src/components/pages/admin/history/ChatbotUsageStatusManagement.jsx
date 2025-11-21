@@ -25,8 +25,9 @@ const ChatbotUsageStatusManagement = () => {
 
   // Grid 상태
   const [gridData, setGridData] = useState([]);
+  const [pageData, setPageData] = useState({});
   const [gridColumns, setGridColumns] = useState([]);
-  const [searchParams, setSearchParams] = useState({ page: 0, size: 10, startDate: null, endDate: null });
+  const [searchParams, setSearchParams] = useState({ page: 1, size: 10, startDate: null, endDate: null });
 
   const dateFormatter = (params) => {
     if (!params.value) return '';
@@ -41,7 +42,7 @@ const ChatbotUsageStatusManagement = () => {
   // 컬럼 정의 (체크박스 없음)
   useEffect(() => {
     setGridColumns([
-      { headerName: 'NO', field: 'number', cellClass: 'text-center', width: 70, suppressSizeToFit: true,
+      { headerName: 'NO', field: 'number', cellClass: 'text-center', suppressSizeToFit: true,
         valueGetter: (params) => {
           try {
             const rowIndex = params.node.rowIndex;
@@ -53,10 +54,10 @@ const ChatbotUsageStatusManagement = () => {
           }
         },
       },
-      { headerName: '날짜', field: 'date', valueFormatter: (p) => dateFormatter(p), flex: 1, cellClass: 'text-center', width: 120 },
-      { headerName: '이용자 수', field: 'usageCount', flex: 1, cellClass: 'text-center', width: 120 },
-      { headerName: '질문 횟수', field: 'questionCount', flex: 1, cellClass: 'text-center', width: 120 },
-      { headerName: '만족도 현황', field: 'satisfactionSummary', flex: 2, cellClass: 'text-center', minWidth: 220 },
+      { headerName: '날짜', field: 'date', valueFormatter: (p) => dateFormatter(p), flex: 1, cellClass: 'text-center'},
+      { headerName: '이용자 수', field: 'usageCount', flex: 1, cellClass: 'text-center'},
+      { headerName: '질문 횟수', field: 'questionCount', flex: 1, cellClass: 'text-center'},
+      { headerName: '만족도 현황', field: 'satisfactionSummary', flex: 2, cellClass: 'text-center',},
     ]);
   }, []);
 
@@ -67,7 +68,7 @@ const ChatbotUsageStatusManagement = () => {
     try {
       const res = await http.get(API_ENDPOINT.HISTORY_USAGE, {
         params: {
-          page: params.page ?? 0,
+          page: params.page ?? 1,
           size: params.size ?? 10,
           startDate: params.startDate || undefined,
           endDate: params.endDate || undefined,
@@ -88,6 +89,11 @@ const ChatbotUsageStatusManagement = () => {
         };
       });
       setGridData(mapped);
+      setPageData({
+        totalElements: body.totalElements || 0,
+        currentPage: (body.page || 0) + 1,
+        pageSize: body.size || 10,
+      });
     } catch (e) {
       setAlertState({
         isOpen: true,
@@ -116,6 +122,7 @@ const ChatbotUsageStatusManagement = () => {
         <AgGrid
           rowDeselection={true}
           rowData={gridData}
+          pageData={pageData}
           columnDefs={gridColumns}
           height={463}
           indicator={{ excel: true }}

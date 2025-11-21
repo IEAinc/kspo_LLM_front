@@ -28,8 +28,9 @@ const DocumentManagement = () => {
 
   // Grid 상태
   const [gridData, setGridData] = useState([]);
+  const [pageData, setPageData] = useState({});
   const [gridColumns, setGridColumns] = useState([]);
-  const [searchParams, setSearchParams] = useState({ page: 0, size: 10, docType: null, fileName: null, startDate: null, endDate: null });
+  const [searchParams, setSearchParams] = useState({ page: 1, size: 10, docType: null, fileName: null, startDate: null, endDate: null });
 
   const handleRowClick = (id) => {
     const basePath = location.pathname; // 현재 경로 가져오기
@@ -94,7 +95,7 @@ const DocumentManagement = () => {
     try {
       const res = await http.get(API_ENDPOINT.DOCS_PAGE, {
         params: {
-          page: params.page ?? 0,
+          page: params.page ?? 1,
           size: params.size ?? 10,
           docType: params.docType || undefined,
           fileName: params.fileName || undefined,
@@ -105,13 +106,17 @@ const DocumentManagement = () => {
 
       // 서버 응답 매핑
       const body = res?.data?.response || {};
-      console.log(body);
       const content = Array.isArray(body?.content) ? body.content : [];
       const mapped = content.map((it) => ({
         id: it.regulationDocsSeq, // 그리드 선택/삭제용 고유키
         ...it,
       }));
       setGridData(mapped);
+      setPageData({
+        totalElements: body.totalElements || 0,
+        currentPage: (body.page || 0) + 1,
+        pageSize: body.size || 10,
+      });
     } catch (e) {
       setAlertState({
         isOpen: true,
@@ -187,6 +192,7 @@ const DocumentManagement = () => {
         <AgGrid
           rowDeselection={true}
           rowData={gridData}
+          pageData={pageData}
           columnDefs={gridColumns}
           height={463}
           indicator={{ excel: true, edit: true, register: true, delete: true }}

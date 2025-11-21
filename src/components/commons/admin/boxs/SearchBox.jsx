@@ -67,7 +67,7 @@ const AdminSearchBox = ({ defaultSearch, onSearch }) => {
     <Box padding={{ px: 16, py: 16 }}>
       <div className="flex flex-col lg:flex-row lg:justify-between">
         <div className="flex flex-col gap-1 lg:items-start">
-          <div className="flex flex-wrap items-center gap-[20px] md:flex-row lg:flex-1 lg:flex-row lg:gap-[40px] lg:mt-[0]">
+          <div className="flex flex-wrap items-center gap-[20px] md:flex-row lg:flex-1 lg:flex-row lg:gap-[20px] lg:mt-[0]">
             <CustomDatePicker
                 options={{ widthSize: 'md', labelSize: 'sm' }}
                 startDate={startDate}
@@ -97,8 +97,8 @@ const AdminSearchBox = ({ defaultSearch, onSearch }) => {
         </div>
 
         <div className="w-full flex items-center justify-end gap-[8px] mt-[10px] lg:w-auto lg:mt-[0] lg:justify-end">
-          <Btn size="sm" minWidth="86px" iconMode="reset" onClick={reset}>초기화</Btn>
-          <Btn type="submit" size="sm" onClick={submit}>검색</Btn>
+          <Btn size="sm" minWidth={"95px"} iconMode="reset" onClick={reset}>초기화</Btn>
+          <Btn type="submit" minWidth={"65px"} size="sm" onClick={submit}>검색</Btn>
         </div>
       </div>
     </Box>

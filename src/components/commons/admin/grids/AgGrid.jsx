@@ -29,12 +29,12 @@ const AgGrid = (props) => {
   const [displayData, setDisplayData] = useState([]); // 현재 페이지에 표시할 데이터
 
   // 상위 데이터의 총 개수
-  const totalItems = props.rowData.length;
+  const totalItems = props.pageData.totalElements;
   const totalPages = Math.ceil(totalItems / pageSize);
 
   // 데이터를 슬라이싱하고 페이지 상태 조정
   useEffect(() => {
-    const calculatedTotalPages = Math.ceil(props.rowData.length / pageSize);
+    const calculatedTotalPages = Math.ceil(totalItems / pageSize);
 
     if (currentPage > calculatedTotalPages && totalItems > 0) {
       if (currentPage !== calculatedTotalPages) {
