@@ -5,6 +5,7 @@ import CustomAlert from '../../../commons/admin/CustomAlert.jsx';
 import Box from '../../../commons/admin/boxs/Box.jsx';
 import AgGrid from '../../../commons/admin/grids/AgGrid.jsx';
 import AdminUserSearchBox from '../../../commons/admin/boxs/AdminUserSearchBox.jsx';
+import Btn from "../../../commons/admin/forms/Btn.jsx";
 
 const AdminManagement = () => {
     const location = useLocation();
@@ -63,8 +64,20 @@ const AdminManagement = () => {
                 width: 140
             },
             {headerName: '허용 IP', field: 'ip', flex: 1, cellClass: 'text-center', width: 160},
+            {
+                headerName: '상세보기',
+                field: 'detail',
+                width: 100,
+                suppressSizeToFit: true,
+                cellClass: 'flex-center',
+                cellRenderer: (params) => (
+                    <Btn size="xxs" onClick={() => navigate(`/ksponcoadministrator/adminManagement/detail/${encodeURIComponent(params.data.id)}`)}>
+                        상세보기
+                    </Btn>
+                ),
+            },
         ]);
-    }, []);
+    }, [navigate]);
 
     // 데이터 조회
     const fetchAdmins = async (criteria) => {

@@ -8,6 +8,7 @@ import AdminManagement from "./components/pages/admin/admin/AdminManagement.jsx"
 import AnswerHistoryManagement from "./components/pages/admin/history/AnswerHistoryManagement.jsx";
 import ChatbotUsageStatusManagement from "./components/pages/admin/history/ChatbotUsageStatusManagement.jsx";
 import AdminRegisterManagement from "./components/pages/admin/admin/AdminRegisterManagement.jsx";
+import AdminDetail from "./components/pages/admin/admin/AdminDetail.jsx";
 
 const App = () => {
 
@@ -31,6 +32,7 @@ const App = () => {
             {/* 관리자 관리 */}
             <Route path="adminManagement" element={<AdminManagement />} />
             <Route path="adminManagement/register" element={<AdminRegisterManagement />} />
+            <Route path="adminManagement/detail/:id" element={<AdminDetail />} />
 
             {/* 이력 관리 */}
             <Route path="history/userQueryAnswerHistory" element={<AnswerHistoryManagement />} />
