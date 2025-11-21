@@ -4,6 +4,7 @@ const Input = ({
                  id,
                  labelName,
                  type = 'text',
+                 accept,
                  placeholder,
                  disabled = false,
                  readonly = false,
@@ -102,6 +103,7 @@ const Input = ({
         disabled={disabled}
         readOnly={readonly}
         required={required}
+        accept={accept}
         className={`
           ${labelName && isNormal ? 'h-[40px]' : 'h-[36px]'}
           p-[10px]

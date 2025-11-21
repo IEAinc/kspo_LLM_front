@@ -9,6 +9,7 @@ import AnswerHistoryManagement from "./components/pages/admin/history/AnswerHist
 import ChatbotUsageStatusManagement from "./components/pages/admin/history/ChatbotUsageStatusManagement.jsx";
 import AdminRegisterManagement from "./components/pages/admin/admin/AdminRegisterManagement.jsx";
 import AdminDetail from "./components/pages/admin/admin/AdminDetail.jsx";
+import DocumentRegister from "./components/pages/admin/document/DocumentRegister.jsx";
 
 const App = () => {
 
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/ksponcoadministrator" element={<Layout />}>
             {/* 문서 관리 */}
             <Route path="document" element={<DocumentManagement />} />
+            <Route path="document/register" element={<DocumentRegister />} />
 
             {/* 관리자 관리 */}
             <Route path="adminManagement" element={<AdminManagement />} />

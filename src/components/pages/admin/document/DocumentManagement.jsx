@@ -148,15 +148,7 @@ const DocumentManagement = () => {
     });
   };
   const handleRegisterClick = () => {
-    setAlertState({
-      isOpen: true,
-      title: '안내',
-      message: '등록 기능은 추후 제공 예정입니다.',
-      iconMode: 'warn',
-      confirmButton: { text: '확인', colorMode: true },
-      cancelButton: false,
-      onConfirm: () => setAlertState((p) => ({ ...p, isOpen: false })),
-    });
+    navigate('/ksponcoadministrator/document/register');
   };
   const onEditClick = (gridApi) => {
     const selectedRows = gridApi?.getSelectedRows?.() || [];
