@@ -10,7 +10,7 @@ import WaitProgressBar from "../commons/chat/WaitProgressBar.jsx";
 import LikesBtn from "../commons/chat/LikesBtn.jsx";
 
 /**
- * @property {string} citation
+ * @property {string} citations
  */
 
 const ChatBot = ({ http }) => {
@@ -166,10 +166,10 @@ const ChatBot = ({ http }) => {
                       }else{
                         return (
                           <div className="answer" key={`ans-${idx}`}>
-                            {item.citation && item.citation.length > 0 ?
+                            {item.citations && item.citations.length > 0 ?
                               <>
                                 {/* 텍스트 & 드롭다운 */}
-                                <AnswerDropdown text={item.content} accordionList={item.citation} />
+                                <AnswerDropdown text={item.content} accordionList={item.citations} />
                               </>
                               :
                               <>
