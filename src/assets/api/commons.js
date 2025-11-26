@@ -56,4 +56,5 @@ export const API_ENDPOINT = {
   VALIDATE_TOKEN: "/admin/validateToken",
   LIKE: "/evaluation",
   ALL_ROOM: "/room/all",
+  PROMPT: "/admin/prompt",
 };
