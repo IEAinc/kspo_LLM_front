@@ -142,6 +142,8 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .chat-box .answer > *:last-child{padding-bottom:0;}
 .chat-box .answer > * + *:not(.rating){border-top:1px solid var(--border-color);padding-top:16px;}
 .chat-box .text-answer{font-weight:500;}
+.chat-box .text-answer div{margin-bottom:16px; gap: 10px;display: flex;flex-direction: column;}
+.chat-box .text-answer hr{margin:16px 0;}
 .chat-box .number-answer ul > li + li{margin-top:12px;}
 .chat-box .number-answer ul > li > p{font-weight:400;padding-left:16px;margin-top:4px;}
 .chat-box .dropdown-answer > p{margin-bottom:20px;}
