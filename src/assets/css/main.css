@@ -145,6 +145,8 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .chat-box .number-answer ul > li + li{margin-top:12px;}
 .chat-box .number-answer ul > li > p{font-weight:400;padding-left:16px;margin-top:4px;}
 .chat-box .dropdown-answer > p{margin-bottom:20px;}
+.chat-box .dropdown-answer > p div{margin-bottom:16px; gap: 10px;display: flex;flex-direction: column;}
+.chat-box .dropdown-answer > p hr{margin:16px 0;}
 .chat-box.active .inner{height:calc(100% - var(--chat-input-box-height));padding-bottom:80px;}
 .chat-box.active .chat-input-box{margin-top:0;position:absolute;bottom:40px;left:50%;z-index:10;transform:translateX(-50%);}
 
