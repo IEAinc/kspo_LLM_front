@@ -64,6 +64,8 @@ const ChatBot = ({ http }) => {
           setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
           setLoading(false);
 
+          http.get(API_ENDPOINT.ALL_ROOM).then((response) => {setChatHistoryList(response.data.response.reverse());});
+
           setTimeout(() => {
             inputRef.current?.focus();
           }, 100);
