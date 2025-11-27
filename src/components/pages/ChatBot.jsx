@@ -131,7 +131,6 @@ const ChatBot = ({ http }) => {
     lines.forEach((line) => {
       if (line.trim() === '---') {
         elements.push(<div key={`div-${keyCounter++}`}>{currentLines.map(parseLineToSpan)}</div>);
-        elements.push(<hr key={`hr-${keyCounter++}`}/>);
         currentLines = [];
       } else {
         currentLines.push(line);

@@ -5,7 +5,7 @@ const AnswerText = (props) => {
 
   return (
     <div className="dropdown-answer">
-      <p>{props.text}</p>
+      <div className="answer">{props.text}</div>
       <AccordionBox accordionList={props.accordionList} />
     </div>
   )
