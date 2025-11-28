@@ -13,6 +13,7 @@ import DocumentRegister from "./components/pages/admin/document/DocumentRegister
 import DocumentDetail from "./components/pages/admin/document/DocumentDetail.jsx";
 import DocumentUpdate from "./components/pages/admin/document/DocumentUpdate.jsx";
 import PromptDetail from "./components/pages/admin/prompt/PromptDetail.jsx";
+import AnswerDetail from "./components/pages/admin/history/AnswerDetail.jsx";
 
 const App = () => {
 
@@ -44,6 +45,7 @@ const App = () => {
             {/* 이력 관리 */}
             <Route path="history/userQueryAnswerHistory" element={<AnswerHistoryManagement />} />
             <Route path="history/chatbotUsageStatus" element={<ChatbotUsageStatusManagement />} />
+            <Route path="history/userQueryAnswerHistory/detail/:id" element={<AnswerDetail />} />
 
             {/* 프롬프트 관리 */}
             <Route path="prompt" element={<PromptDetail />} />

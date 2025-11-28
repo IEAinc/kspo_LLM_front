@@ -106,7 +106,7 @@ const DocumentRegister = () => {
               <input
                   id="doc-file-input"
                   type="file"
-                  accept=".pdf,.hwp"
+                  accept=".pdf"
                   onChange={onFileChange}
                   className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
               />
@@ -114,7 +114,7 @@ const DocumentRegister = () => {
                   htmlFor="doc-file-input"
                   className="inline-flex items-center h-[36px] px-[12px] border border-br-gray rounded-[4px] text-[14px] text-black bg-white cursor-pointer select-none"
               >
-                파일 선택 (pdf, hwp)
+                파일 선택 (pdf)
               </label>
             </div>
           </div>
@@ -272,7 +272,7 @@ const DocumentRegister = () => {
               </div>
             ) : (
               <div style={{ height: 274 }} className="w-full flex items-center justify-center text-gray-500 text-[14px]">
-                미리보기할 파일을 선택하세요 (pdf, hwp)
+                미리보기할 파일을 선택하세요 (pdf)
               </div>
             )}
           </div>
