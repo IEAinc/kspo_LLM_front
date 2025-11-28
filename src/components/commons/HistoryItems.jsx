@@ -92,7 +92,22 @@ const HistoryItems = (props) => {
     try{
       props.http.delete(`/room/${props.item.chatRoomId}`)
       .then(() => {
-        props.setChatLoad([]);
+        props.setChatHistoryList((prevChatList) =>
+          prevChatList.filter((_, index) => index !== props.index)
+        );
+
+        /* 삭제한 채팅이 열려있을 경우 초기화 */
+        if(props.activeIndex === props.index){
+          props.setChatLoad([]);
+          props.setActiveIndex(null);
+          props.setChatStart(false);
+        }
+
+        /* 활성화 인덱스 조정 */
+        if(props.activeIndex > props.index){
+          props.setActiveIndex((prevIndex) => prevIndex - 1);
+        }
+
         props.setChatStart(false);
         props.setActiveIndex(null);
       })

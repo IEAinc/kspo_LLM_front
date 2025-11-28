@@ -8,6 +8,7 @@ import AnswerDropdown from "../commons/chat/AnswerDropdown.jsx";
 import {API_ENDPOINT, generateRandomString} from "../../assets/api/commons.js";
 import WaitProgressBar from "../commons/chat/WaitProgressBar.jsx";
 import LikesBtn from "../commons/chat/LikesBtn.jsx";
+import ErrorBalloon from "../commons/chat/ErrorBalloon.jsx";
 
 /**
  * @property {string} citations
@@ -53,7 +54,6 @@ const ChatBot = ({ http }) => {
       if(!chatStart){
         /* 새 채팅일 경우 */
         setChatStart(true);
-        setActiveIndex(0);
 
         http.post(API_ENDPOINT.CHAT_QUERY, {
           type: "USER",
@@ -64,7 +64,10 @@ const ChatBot = ({ http }) => {
           setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
           setLoading(false);
 
-          http.get(API_ENDPOINT.ALL_ROOM).then((response) => {setChatHistoryList(response.data.response.reverse());});
+          http.get(API_ENDPOINT.ALL_ROOM).then((response) => {
+            setChatHistoryList(response.data.response.reverse());
+            setActiveIndex(0);
+          });
 
           setTimeout(() => {
             inputRef.current?.focus();
@@ -87,6 +90,12 @@ const ChatBot = ({ http }) => {
       }
     }catch(e){
       console.log(e);
+      setLoading(false);
+      setChatLoad((prevChatLoad) => [...prevChatLoad, {
+        type: "ERROR",
+        content: "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        citations: []
+      }]);
     }
   }
 
@@ -210,6 +219,8 @@ const ChatBot = ({ http }) => {
                     {chatLoad.map((item, idx) => {
                       if(item.type === "USER"){
                         return <SendBalloon sendMessage={item.content} key={`user-${idx}`} />
+                      }else if(item.type === "ERROR") {
+                        return <ErrorBalloon errorMessage={item.content} key={`error-${idx}`} />
                       }else{
                         return (
                           <div className="answer" key={`ans-${idx}`}>
