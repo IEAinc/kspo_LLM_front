@@ -1,56 +1,28 @@
-import {Outlet, useLocation, useNavigate} from "react-router-dom";
-import {useEffect} from "react";
-import AdminHeader from "../../layout/admin/AdminHeader.jsx";
-import AdminSidebar from "../../layout/admin/AdminSidebar.jsx";
-import {userApi} from "../../../assets/api/userApi.js";
+import { Outlet } from "react-router-dom";
 import "../../../assets/css/admin.css";
 
+import AdminHeader from "../../layout/admin/AdminHeader.jsx";
+import AdminSidebar from "../../layout/admin/AdminSidebar.jsx";
+
 export default function Layout() {
-    const location = useLocation();
-    const navigator = useNavigate()
+  return (
+    <div>
+      {/* 헤더 */}
+      <AdminHeader />
 
-    function logoutUser() {
-        userApi.logout()
-            .then(() => {
-                navigator("/ksponcoadministrator/login")
-            })
-            .catch(() => {
-                navigator("/ksponcoadministrator/login")
-            });
-    }
+      {/* 사이드바 */}
+      <AdminSidebar />
 
-    const checkAuthentication = () => {
-        userApi.validateToken()
-            .then((response) => {
-                // 200 일경우 로컬 스토리지에 {"id", "name"} 데이터 저장
-                if (response.status === 200) {
-                    localStorage.setItem("userId", response.data.id);
-                    localStorage.setItem("userName", response.data.name);
-                } else if (response.status !== 200) logoutUser();
-            })
-            .catch(() => { logoutUser(); });
-    }
-
-    useEffect(() => {
-        checkAuthentication();
-    }, [location]);
-    return (
+      <div className="mt-[48px] ml-[220px] p-[32px] bg-primary-blue-light"
+        style={{ minHeight: 'calc(100vh - 48px)', overflowY: 'auto' }}>
+        {/* 브레드크럼 추가 */}
         <div>
-            {/* 헤더 */}
-            <AdminHeader/>
-            {/* 사이드바 */}
-            <AdminSidebar/>
-            {/* 콘텐츠 */}
-            <div className="mt-[48px] ml-[220px] p-[32px] bg-primary-blue-light"
-                 style={{minHeight: 'calc(100vh - 48px)', overflowY: 'auto'}}>
-                {/* 브레드크럼 추가 */}
-                <div>
-                    {/*<Breadcrumb/>*/}
-                </div>
-
-                {/* 하위 콘텐츠 */}
-                <Outlet/>
-            </div>
+          {/*<Breadcrumb/>*/}
         </div>
-    )
+
+        {/* 하위 콘텐츠 */}
+        <Outlet />
+      </div>
+    </div>
+  );
 }
