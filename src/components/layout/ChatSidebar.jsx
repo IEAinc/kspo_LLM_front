@@ -3,7 +3,7 @@ import Button from "../commons/Button.jsx";
 import HistoryItems from "../commons/HistoryItems.jsx";
 
 const ChatSidebar = (props) => {
-  const [sidebarClose, setSidebarClose] = useState(false);
+  const [sidebarClose, setSidebarClose] = useState(true);
 
   /* 사이드바 열고 닫기 */
   const handleSidebarClose = () => {

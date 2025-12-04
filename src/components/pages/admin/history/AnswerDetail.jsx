@@ -80,7 +80,7 @@ const AnswerDetail = () => {
     if (id) load();
   }, [id]);
 
-  const goList = () => navigate('/ksponcoadministrator/userQueryAnswerHistory');
+  const goList = () => navigate('/ksponcoadministrator/history/userQueryAnswerHistory');
 
   return (
     <div>
