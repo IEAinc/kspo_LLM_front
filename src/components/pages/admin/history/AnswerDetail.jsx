@@ -12,7 +12,9 @@ import {API_ENDPOINT, http} from '../../../../assets/api/commons.js';
  * \n : 줄바꿈
  */
 const textParser = (text) => {
-  const lines = text.split('\n');
+  // `---` 주변을 표준화: 앞뒤 공백/줄바꿈을 제거하고 `\n---\n`로 통일
+  const normalized = text.replace(/\s*-{3,}\s*/g, '\n---\n');
+  const lines = normalized.split('\n');
   const elements = [];
   let currentLines = [];
   let keyCounter = 0;

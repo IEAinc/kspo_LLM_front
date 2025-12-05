@@ -31,6 +31,8 @@ const App = () => {
 
           {/*<Route path="*" element={<NotFound />} />*/}
           <Route path="/ksponcoadministrator" element={<Layout />}>
+            {/* 기본 진입을 document로 리다이렉트 */}
+            <Route index element={<Navigate to="document" replace />} />
             {/* 문서 관리 */}
             <Route path="document" element={<DocumentManagement />} />
             <Route path="document/register" element={<DocumentRegister />} />
