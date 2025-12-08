@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Box from '../../../commons/admin/boxs/Box.jsx';
 import Input from '../../../commons/admin/forms/Input.jsx';
 import Select from '../../../commons/admin/forms/Select.jsx';
@@ -31,6 +31,8 @@ const PromptDetail = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [mode, setMode] = useState('create'); // create | update
+  const location = useLocation();
+  const isDefault = location?.pathname?.endsWith('/prompt/default');
 
   const [promptSeq, setPromptSeq] = useState(null);
   const [systemPrompt, setSystemPrompt] = useState('');
@@ -41,7 +43,9 @@ const PromptDetail = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await http.get(API_ENDPOINT.PROMPT);
+        const res = await http.get(API_ENDPOINT.PROMPT, {
+          params: isDefault ? { scId: 'KS' } : undefined,
+        });
         const data = res?.data?.response ?? res?.data ?? null;
         if (data) {
           setPromptSeq(data.promptSeq ?? null);
@@ -74,7 +78,7 @@ const PromptDetail = () => {
       }
     };
     load();
-  }, []);
+  }, [isDefault]);
 
   const goList = () => navigate('/ksponcoadministrator/promptManagement');
 
@@ -111,6 +115,7 @@ const PromptDetail = () => {
       userPrompt: userPrompt || null,
       topK: topK === '' ? null : Number(topK),
       useYn: useYn?.value || 'Y',
+      ...(isDefault ? { scId: 'KS' } : {}),
     };
 
     try {
@@ -133,7 +138,9 @@ const PromptDetail = () => {
           // 최신 데이터 다시 조회
           setLoading(true);
           try {
-            const res = await http.get(API_ENDPOINT.PROMPT);
+            const res = await http.get(API_ENDPOINT.PROMPT, {
+              params: isDefault ? { scId: 'KS' } : undefined,
+            });
             const data = res?.data?.response ?? res?.data ?? null;
             if (data) {
               setPromptSeq(data.promptSeq ?? null);

@@ -51,6 +51,7 @@ const App = () => {
 
             {/* 프롬프트 관리 */}
             <Route path="prompt" element={<PromptDetail />} />
+            <Route path="prompt/default" element={<PromptDetail />} />
           </Route>
         </Routes>
       </Router>

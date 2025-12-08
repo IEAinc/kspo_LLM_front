@@ -38,7 +38,7 @@ const ChatBot = ({ http }) => {
   }
 
   /* 메세지 전송 */
-  const chatSendProcess = () => {
+  const chatSendProcess = async () => {
     setSendBtnActive(false);
     setChatInputVal("");
     setLoading(true);
@@ -50,52 +50,51 @@ const ChatBot = ({ http }) => {
     /* 채팅룸 ID 랜덤 생성 */
     let createRoomId = generateRandomString();
 
-    try{
-      if(!chatStart){
+    try {
+      if (!chatStart) {
         /* 새 채팅일 경우 */
         setChatStart(true);
 
-        http.post(API_ENDPOINT.CHAT_QUERY, {
+        const response = await http.post(API_ENDPOINT.CHAT_QUERY, {
           type: "USER",
           content: chatInputVal,
           chatRoomId: createRoomId
-        })
-        .then((response) => {
-          setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
-          setLoading(false);
-
-          http.get(API_ENDPOINT.ALL_ROOM).then((response) => {
-            setChatHistoryList(response.data.response.reverse());
-            setActiveIndex(0);
-          });
-
-          setTimeout(() => {
-            inputRef.current?.focus();
-          }, 100);
         });
-      }else{
-        http.post(API_ENDPOINT.CHAT_QUERY, {
+
+        setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
+
+        const roomsRes = await http.get(API_ENDPOINT.ALL_ROOM);
+        setChatHistoryList(roomsRes.data.response.reverse());
+        setActiveIndex(0);
+
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
+      } else {
+        const response = await http.post(API_ENDPOINT.CHAT_QUERY, {
           type: "USER",
           content: chatInputVal,
           chatRoomId: chatHistoryList[0].chatRoomId
-        })
-        .then((response) => {
-          setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
-          setLoading(false);
-
-          setTimeout(() => {
-            inputRef.current?.focus();
-          }, 100);
         });
+
+        setChatLoad((prevChatLoad) => [...prevChatLoad, response.data.response]);
+
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
       }
-    }catch(e){
-      console.log(e);
+    } catch (e) {
+      console.error(e);
+      setChatLoad((prevChatLoad) => [
+        ...prevChatLoad,
+        {
+          type: "ERROR",
+          content: "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+          citations: []
+        }
+      ]);
+    } finally {
       setLoading(false);
-      setChatLoad((prevChatLoad) => [...prevChatLoad, {
-        type: "ERROR",
-        content: "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-        citations: []
-      }]);
     }
   }
 
