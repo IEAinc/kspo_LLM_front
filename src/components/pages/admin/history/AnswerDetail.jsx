@@ -59,7 +59,6 @@ const AnswerDetail = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [evaluation, setEvaluation] = useState('');
-  const [ip, setIp] = useState('');
   const [lastCreated, setLastCreated] = useState('');
 
   useEffect(() => {
@@ -70,7 +69,6 @@ const AnswerDetail = () => {
         setQuestion(data.question || '');
         setAnswer(data.answer || '');
         setEvaluation(data.evaluation || '');
-        setIp(data.ip || '');
         setLastCreated(data.lastCreated || '');
       } catch (e) {
         // eslint-disable-next-line no-alert
@@ -127,16 +125,6 @@ const AnswerDetail = () => {
           </div>
 
           {/* 최종 수정자 / 최종 수정일시 */}
-          <div className="w-full flex">
-            <div className="min-w-[120px] flex items-center justify-center text-[14px] font-bold text-gray1 bg-tb-bg-color border-r border-b border-tb-br-color">
-              등록 IP
-            </div>
-            <div className="w-full px-[8px] py-[6px] border-b border-tb-br-color">
-              <div className="w-full lg:max-w-[321px] md:max-w-[321px]">
-                {ip}
-              </div>
-            </div>
-          </div>
           <div className="w-full flex">
             <div className="min-w-[120px] flex items-center justify-center text-[14px] font-bold text-gray1 bg-tb-bg-color border-r border-b border-tb-br-color">
               질문 일시
