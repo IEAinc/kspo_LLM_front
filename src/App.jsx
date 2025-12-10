@@ -14,6 +14,7 @@ import DocumentDetail from "./components/pages/admin/document/DocumentDetail.jsx
 import DocumentUpdate from "./components/pages/admin/document/DocumentUpdate.jsx";
 import PromptDetail from "./components/pages/admin/prompt/PromptDetail.jsx";
 import AnswerDetail from "./components/pages/admin/history/AnswerDetail.jsx";
+import DocumentIndex from "./components/pages/admin/document/DocumentIndex.jsx";
 
 const App = () => {
 
@@ -52,6 +53,7 @@ const App = () => {
             {/* 프롬프트 관리 */}
             <Route path="prompt" element={<PromptDetail />} />
             <Route path="prompt/default" element={<PromptDetail />} />
+            <Route path="document/index/:fileName" element={<DocumentIndex />} />
           </Route>
         </Routes>
       </Router>
