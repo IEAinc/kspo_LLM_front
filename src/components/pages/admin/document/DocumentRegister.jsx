@@ -6,7 +6,7 @@ import Input from '../../../commons/admin/forms/Input.jsx';
 import Btn from '../../../commons/admin/forms/Btn.jsx';
 import { API_ENDPOINT, http, getUserIdFromLocalStorage } from '../../../../assets/api/commons.js';
 
-const docTypeOptions = [
+const DEFAULT_DOC_TYPE_OPTIONS = [
   { value: 'BASE', label: '기본규정' },
   { value: 'GA', label: '총무' },
   { value: 'HRP', label: '인사' },
@@ -27,6 +27,8 @@ const DocumentRegister = () => {
   const [fileUrl, setFileUrl] = useState(null);
   const [fileName, setFileName] = useState('');
 
+  // doc type options: 기본값을 가지고 있다가 서버에서 성공적으로 받아오면 대체됩니다.
+  const [docTypeOptions, setDocTypeOptions] = useState(DEFAULT_DOC_TYPE_OPTIONS);
   const [docType, setDocType] = useState(docTypeOptions[0]);
   const [useYn, setUseYn] = useState(useYnOptions[0]);
   const [docName, setDocName] = useState('');
@@ -41,6 +43,31 @@ const DocumentRegister = () => {
       if (fileUrl) URL.revokeObjectURL(fileUrl);
     };
   }, [fileUrl]);
+
+  // 마운트 시 서버에서 DOC_TYPE 코드 목록을 가져와서 옵션을 덮어씀
+  useEffect(() => {
+    let mounted = true;
+    const loadDocTypes = async () => {
+      try {
+        const res = await http.get('/admin/commonCode/codeType/DOC_TYPE');
+        const list = res?.data?.response;
+        if (mounted && Array.isArray(list) && list.length > 0) {
+          setDocTypeOptions(list);
+          setDocType((prev) => {
+            if (!prev) return list[0];
+            const found = list.find((o) => o.value === prev.value);
+            return found ? prev : list[0];
+          });
+        }
+      } catch (e) {
+        console.warn('Failed to load DOC_TYPE options, using defaults.', e);
+      }
+    };
+    loadDocTypes();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const onFileChange = (e) => {
     const f = e.target.files?.[0];
