@@ -54,7 +54,6 @@ const AnswerHistoryManagement = () => {
       { headerName: '출처', field: 'source', flex: 1, cellClass: 'text-center', width: 120 },
       { headerName: '답변내용', field: 'answer', flex: 3, cellClass: 'text-left', minWidth: 220 },
       { headerName: '만족도', field: 'evaluation', flex: 1, cellClass: 'text-center', width: 100, valueFormatter: (p) => (p.value === '미응답' ? '무응답' : p.value) },
-      { headerName: 'IP', field: 'ip', flex: 1, cellClass: 'text-center', width: 140 },
       {
         headerName: '상세보기',
         field: 'chatGroupSeq',
