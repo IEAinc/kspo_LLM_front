@@ -127,10 +127,12 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .chat-bot .sidebar .top{height:var(--sidebar-top-height);}
 .chat-bot .sidebar .new-chat{margin-top:12px;}
 .chat-bot header{width:100%;height:var(--header-height);display:flex;justify-content:space-between;align-items:center;padding:0 16px;}
+.chat-bot header div:first-of-type{display:flex;align-items:center;gap:12px;}
+.chat-bot header div:first-of-type .btn{display:none;}
 .chat-bot .chat-box{width:100%;height:calc(100% - var(--header-height));}
 .chat-bot .chat-box > .inner{width:100%;padding:16px 16px 0;overflow-y:auto;scroll-behavior:smooth;}
 .chat-bot .start-chat{width:100%;font-size:var(--fs32);font-weight:600;text-align:center;margin-top:34vh;}
-.chat-box .chat-view{max-width:768px;display:flex;flex-direction:column;gap:40px;margin:0 auto;}
+.chat-box .chat-view{max-width:768px;display:flex;flex-direction:column;gap:40px;margin:0 auto;font-size:var(--fs16);}
 .chat-bot .chat-input-box{max-width:768px;width:100%;height:var(--chat-input-box-height);background:var(--white);display:flex;align-items:center;border:1px solid var(--border-color);border-radius:100px;padding:0 10px;margin:40px auto 0;position:relative;box-shadow: 0 4px 14px 0 rgba(0,0,0,0.05);}
 .chat-bot .chat-input-box label{flex:1;margin:0 20px 0 8px;}
 .chat-bot .chat-input-box input{color:var(--text-color45);}
@@ -206,3 +208,23 @@ button, .btn{display:flex;justify-content:center;align-items:center;gap:8px;back
 .custom-alert-message{color:var(--text-color72);font-size:16px;font-weight:500;white-space:pre-line;}
 
 .custom-alert-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:20px;}
+
+@media (max-width: 768px) {
+    .chat-bot.large{
+        --fs32:30px;
+        --fs16:15px;
+        --fs14:13px;
+    }
+
+    .chat-bot.small{
+        --fs32:26px;
+        --fs16:12px;
+        --fs14:10px;
+    }
+
+    .chat-bot .sidebar {position: absolute;left: 0;top: 0;height: 100%;transition: transform 400ms ease-in-out, padding 400ms ease-in-out, width 400ms ease-in-out;z-index: 1000;}
+    .chat-bot .sidebar.close {transform: translateX(calc(-1 * var(--sidebar-width)));pointer-events: none;z-index: 1000;}
+    .chat-bot .sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.25);opacity:0;visibility:hidden;transition:opacity 200ms ease-in-out, visibility 200ms ease-in-out;z-index: 500;pointer-events:none;}
+    .chat-bot .sidebar-backdrop.open{opacity:1;visibility:visible;pointer-events:auto;}
+    .chat-bot header div:first-of-type .btn{display:flex;}
+}

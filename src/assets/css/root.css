@@ -39,4 +39,14 @@
     --chat-balloon-bg:#e8e8e8;
     --accordion-bg:#fafafa;
     --error-balloon-bg: #fff5f5;
+
+    @media (max-width: 768px) {
+        --fs32:28px;
+        --fs28:24px;
+        --fs24:20px;
+        --fs20:16px;
+        --fs16:14px;
+        --fs14:12px;
+        --fs12:10px;
+    }
 }

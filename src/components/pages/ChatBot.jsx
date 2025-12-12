@@ -15,6 +15,7 @@ import ErrorBalloon from "../commons/chat/ErrorBalloon.jsx";
  */
 
 const ChatBot = ({ http }) => {
+  const [sidebarClose, setSidebarClose] = useState(true);
   const [chatInputVal, setChatInputVal] = useState("");
   const [sendBtnActive, setSendBtnActive] = useState(false);
   const [chatStart, setChatStart] = useState(false);
@@ -159,6 +160,10 @@ const ChatBot = ({ http }) => {
     }
   }
 
+  const handleSidebarClose = () => {
+    setSidebarClose(!sidebarClose);
+  }
+
   /* 새 채팅 및 채팅 시 마다 리스트 업데이트 */
   useEffect(() => {
     /* 스크롤 내리기 */
@@ -174,15 +179,16 @@ const ChatBot = ({ http }) => {
       .then((response) => {
         setChatHistoryList(response.data.response.reverse());
 
-        if(response.data.response.length > 0){
-          setChatStart(true);
-          setActiveIndex(0);
-
-          http.get(`/history/${response.data.response[0].chatRoomId}`)
-          .then((response) => {
-            setChatLoad(response.data.response);
-          });
-        }
+        // 2025-12-12 하이라이트 제거
+        // if(response.data.response.length > 0){
+        //   setChatStart(true);
+        //   setActiveIndex(0);
+        //
+        //   http.get(`/history/${response.data.response[0].chatRoomId}`)
+        //   .then((response) => {
+        //     setChatLoad(response.data.response);
+        //   });
+        // }
       })
     }catch(e){
       console.log(e);
@@ -195,6 +201,8 @@ const ChatBot = ({ http }) => {
         <ChatSidebar
           http={http}
           chatHistoryList={chatHistoryList}
+          handleSidebarClose={handleSidebarClose}
+          sidebarClose={sidebarClose}
           setChatHistoryList={setChatHistoryList}
           setChatStart={setChatStart}
           chatLoad={chatLoad}
@@ -205,8 +213,12 @@ const ChatBot = ({ http }) => {
           chatViewRef={chatViewRef}
         />
 
+        <div
+            className={`sidebar-backdrop${sidebarClose ? '' : ' open'}`}
+            onClick={handleSidebarClose}
+        />
         <div className="contents">
-          <ChatBotHeader textSize={textSize} setTextSize={setTextSize} />
+          <ChatBotHeader textSize={textSize} setTextSize={setTextSize} handleSidebarClose={handleSidebarClose} />
 
           <div className={`chat-box${chatStart ? " active" : ""}`}>
             <div className="inner" ref={chatViewRef}>

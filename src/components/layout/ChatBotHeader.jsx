@@ -15,7 +15,10 @@ const ChatBotHeader = (props) => {
   }
   return (
     <header>
-      <a href="/"><img src={`${logo}`} alt="KSPO&CO 한국체육산업개발 사내챗봇"/></a>
+      <div>
+        <Button icon={"menu"} onClick={props.handleSidebarClose} />
+        <a href="/"><img src={`${logo}`} alt="KSPO&CO 한국체육산업개발 사내챗봇"/></a>
+      </div>
       <Button className={"text-view"} text={props.textSize} onClick={handleTextSize} />
     </header>
   )

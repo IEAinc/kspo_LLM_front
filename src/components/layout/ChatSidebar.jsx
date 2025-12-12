@@ -3,12 +3,6 @@ import Button from "../commons/Button.jsx";
 import HistoryItems from "../commons/HistoryItems.jsx";
 
 const ChatSidebar = (props) => {
-  const [sidebarClose, setSidebarClose] = useState(true);
-
-  /* 사이드바 열고 닫기 */
-  const handleSidebarClose = () => {
-    setSidebarClose(!sidebarClose);
-  }
 
   /* 새 채팅 클릭 */
   const handleNewChat = () => {
@@ -18,13 +12,13 @@ const ChatSidebar = (props) => {
   };
 
   return (
-    <div className={`sidebar${sidebarClose ? " close" : ""}`}>
+    <div className={`sidebar${props.sidebarClose ? " close" : ""}`}>
       <div className="top">
-        <Button icon={"menu"} onClick={handleSidebarClose} />
-        <Button className={`new-chat${sidebarClose ? " btn-text-hide" : ""}`} icon={"write"} text={"새 채팅"} contained onClick={() => handleNewChat()} />
+        <Button icon={"menu"} onClick={props.handleSidebarClose} />
+        <Button className={`new-chat${props.sidebarClose ? " btn-text-hide" : ""}`} icon={"write"} text={"새 채팅"} contained onClick={() => handleNewChat()} />
       </div>
 
-      <div className={`history-list${sidebarClose ? " hide" : ""}`}>
+      <div className={`history-list${props.sidebarClose ? " hide" : ""}`}>
         <h3>채팅</h3>
         <ul>
           { props.chatHistoryList.map((item, index) => (
